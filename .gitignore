@@ -1,0 +1,3 @@
+.vagrant/
+*.box
+package/

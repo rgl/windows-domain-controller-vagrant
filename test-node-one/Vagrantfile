@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# this Vagranfile needs vagrant-reload, you have to install it with:
+#   vagrant plugin install vagrant-reload
+
+Vagrant.require_version ">= 1.8.1"
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "windows_2012_r2"
+    config.vm.define "test-node-one"
+    config.vm.hostname = "test-node-one"
+
+    config.vm.provider :virtualbox do |v, override|
+        v.linked_clone = true
+        v.cpus = 2
+        v.memory = 2048
+        v.customize ["modifyvm", :id, "--vram", 64]
+        v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    end
+
+    config.vm.network "private_network", ip: "192.168.56.3"
+
+    config.vm.provision "shell", path: "provision/locale.ps1"
+    config.vm.provision "shell", path: "provision/test-node-one.ps1"
+    config.vm.provision "shell", path: "provision/add-to-domain.ps1"
+    config.vm.provision :reload
+    config.vm.provision "shell", path: "provision/show-sid.ps1"
+end
