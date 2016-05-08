@@ -34,5 +34,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision :reload
     config.vm.provision "shell", path: "provision/domain-controller-configure.ps1"
     config.vm.provision "shell", path: "provision/ad-explorer.ps1"
+    config.vm.provision "shell", path: "provision/ca.ps1"
+    config.vm.provision :reload
     config.vm.provision "shell", path: "provision/summary.ps1"
 end

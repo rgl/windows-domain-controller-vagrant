@@ -5,6 +5,10 @@ This also shows how to add a Computer to an existing domain using PowerShell.
 
 This will create an `example.com` Active Directory Domain Forest.
 
+This will also install a Certification Authority with a GPO to automatically enroll
+computers with a certificate signed by the trusted domain CA, Remote Desktop users
+will therefore see and use trusted certificates.  
+
 This setup will use the following static IP addresses:
 
     IP            Hostname                   Description

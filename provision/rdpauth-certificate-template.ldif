@@ -1,0 +1,44 @@
+dn: CN=RDPAuth,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=example,DC=com
+changetype: add
+objectClass: top
+objectClass: pKICertificateTemplate
+cn: RDPAuth
+distinguishedName: 
+ CN=RDPAuth,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Conf
+ iguration,DC=example,DC=com
+instanceType: 4
+whenCreated: 20160507125417.0Z
+whenChanged: 20160507125417.0Z
+displayName: RDPAuth
+uSNCreated: 16499
+uSNChanged: 16499
+showInAdvancedViewOnly: TRUE
+name: RDPAuth
+objectGUID:: IHNK8yKOiU2W42Ga6NKiHg==
+flags: 131680
+revision: 100
+objectCategory: 
+ CN=PKI-Certificate-Template,CN=Schema,CN=Configuration,DC=example,DC=com
+pKIDefaultKeySpec: 1
+pKIKeyUsage:: oAA=
+pKIMaxIssuingDepth: 0
+pKICriticalExtensions: 2.5.29.15
+pKIExpirationPeriod:: AEA5hy7h/v8=
+pKIOverlapPeriod:: AICmCv/e//8=
+pKIExtendedKeyUsage: 1.3.6.1.5.5.7.3.1
+pKIExtendedKeyUsage: 1.3.6.1.4.1.311.54.1.2
+pKIDefaultCSPs: 1,Microsoft RSA SChannel Cryptographic Provider
+dSCorePropagationData: 16010101000000.0Z
+msPKI-RA-Signature: 0
+msPKI-Enrollment-Flag: 32
+msPKI-Private-Key-Flag: 84214016
+msPKI-Certificate-Name-Flag: 134217728
+msPKI-Minimal-Key-Size: 4096
+msPKI-Template-Schema-Version: 4
+msPKI-Template-Minor-Revision: 2
+msPKI-Cert-Template-OID: 
+ 1.3.6.1.4.1.311.21.8.12566344.5109328.3231148.2981568.15256247.112.12177488.87
+ 2240
+msPKI-Certificate-Application-Policy: 1.3.6.1.5.5.7.3.1
+msPKI-Certificate-Application-Policy: 1.3.6.1.4.1.311.54.1.2
+
