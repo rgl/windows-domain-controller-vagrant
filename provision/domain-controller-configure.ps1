@@ -1,7 +1,10 @@
 $ErrorActionPreference = 'Stop'
 
-$domain = 'example.com'
-$usersAdPath = 'CN=Users,DC=example,DC=com'
+
+$adDomain = Get-ADDomain
+$domain = $adDomain.DNSRoot
+$domainDn = $adDomain.DistinguishedName
+$usersAdPath = "CN=Users,$domainDn"
 $password = ConvertTo-SecureString -AsPlainText 'HeyH0Password' -Force
 
 
