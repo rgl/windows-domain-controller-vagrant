@@ -3,14 +3,13 @@ $ErrorActionPreference = 'Stop'
 
 $domain = 'example.com'
 $netbiosDomain = 'EXAMPLE'
+$safeModeAdminstratorPassword = ConvertTo-SecureString 'HeyH0Password' -AsPlainText -Force
 
 
 # install the AD services and administration tools.
 Install-WindowsFeature AD-Domain-Services,RSAT-AD-AdminCenter,RSAT-ADDS-Tools                      
 
 Import-Module ADDSDeployment
-
-$safeModeAdminstratorPassword = ConvertTo-SecureString 'HeyH0Password' -AsPlainText -Force
 
 Install-ADDSForest `
     -InstallDns `
