@@ -5,6 +5,13 @@ $usersAdPath = 'CN=Users,DC=example,DC=com'
 $password = ConvertTo-SecureString -AsPlainText 'HeyH0Password' -Force
 
 
+# add the vagrant user to the Enterprise Admins group.
+# NB this is needed to install the Enterprise Root Certification Authority.
+Add-ADGroupMember `
+    -Identity 'Enterprise Admins' `
+    -Member "CN=vagrant,$usersAdPath"
+
+
 # disable all user accounts, except the ones defined here.
 $enabledAccounts = @(
     # NB vagrant only works when this account is enabled.
@@ -70,11 +77,22 @@ Get-ADPrincipalGroupMembership -Identity 'john.doe' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
+echo 'jane.doe Group Membership'
+Get-ADPrincipalGroupMembership -Identity 'jane.doe' `
+    | Select-Object Name,DistinguishedName,SID `
+    | Format-Table -AutoSize | Out-String -Width 2000
+
 echo 'vagrant Group Membership'
 Get-ADPrincipalGroupMembership -Identity 'vagrant' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
+
+echo 'Enterprise Administrators'
+Get-ADGroupMember `
+    -Identity 'Enterprise Admins' `
+    | Select-Object Name,DistinguishedName,SID `
+    | Format-Table -AutoSize | Out-String -Width 2000
 
 echo 'Domain Administrators'
 Get-ADGroupMember `
