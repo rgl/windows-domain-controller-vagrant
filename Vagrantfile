@@ -32,10 +32,6 @@ Vagrant.configure("2") do |config|
     config.vm.provision :reload
     config.vm.provision "shell", path: "provision/domain-controller.ps1"
     config.vm.provision :reload
-    # we need to wait a bit for the DC to be ready.
-    # 3 minutes should be enough.
-    # TODO find a way to known when the DC is ready. Maybe by trying to connect to the AD?
-    config.vm.provision "shell", inline: "Sleep -Seconds (3*60)", name: "Sleeping until the DC is ready"
     config.vm.provision "shell", path: "provision/configure-domain-controller.ps1"
     config.vm.provision "shell", path: "provision/summary.ps1"
 end
