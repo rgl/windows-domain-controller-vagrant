@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: "192.168.56.2"
 
     config.vm.provision "shell", path: "provision/locale.ps1"
+    config.vm.provision :reload
     config.vm.provision "shell", path: "provision/domain-controller.ps1"
     config.vm.provision :reload
     # we need to wait a bit for the DC to be ready.
