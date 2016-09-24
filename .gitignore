@@ -1,3 +1,5 @@
 .vagrant/
 *.box
 package/
+tmp/
+ldaprc

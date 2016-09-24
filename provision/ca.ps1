@@ -3,6 +3,8 @@ $ErrorActionPreference = 'Stop'
 # install the AD services and administration tools.
 Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 
+$caCommonName = 'Example Enterprise Root CA'
+
 # configure the CA DN using the default DN suffix (which is based on the
 # current Windows Domain, example.com) to:
 #
@@ -12,13 +14,18 @@ Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 #    Enterprise Admins group. 
 Install-AdcsCertificationAuthority `
     -CAType EnterpriseRootCa `
-    -CACommonName 'Example Enterprise Root CA' `
+    -CACommonName $caCommonName `
     -HashAlgorithmName SHA256 `
     -KeyLength 4096 `
     -ValidityPeriodUnits 8 `
     -ValidityPeriod Years `
     -Force
 
+# export the CA certificate to the Vagrant project directory, so it can be used by other machines.
+mkdir -Force C:\vagrant\tmp | Out-Null
+dir Cert:\LocalMachine\My -DnsName $caCommonName `
+    | Export-Certificate -FilePath "C:\vagrant\tmp\$($caCommonName -replace ' ','').der" `
+    | Out-Null
 
 # add the `RDPAuth` certificate template to the AD.
 #
