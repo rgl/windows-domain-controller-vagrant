@@ -12,6 +12,13 @@ Vagrant.configure("2") do |config|
     config.vm.define "windows-domain-controller"
     config.vm.hostname = "dc"
 
+    # use the plaintext WinRM transport and force it to use basic authentication.
+    # NB this is needed because the default negotiate transport stops working
+    #    after the domain controller is installed.
+    #    see https://groups.google.com/forum/#!topic/vagrant-up/sZantuCM0q4
+    config.winrm.transport = :plaintext
+    config.winrm.basic_auth_only = true
+
     config.vm.provider :virtualbox do |v, override|
         v.linked_clone = true
         v.cpus = 2
