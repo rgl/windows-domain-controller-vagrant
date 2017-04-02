@@ -5,12 +5,11 @@ $domain = 'example.com'
 $netbiosDomain = 'EXAMPLE'
 $safeModeAdminstratorPassword = ConvertTo-SecureString 'HeyH0Password' -AsPlainText -Force
 
-
-# install the AD services and administration tools.
+echo 'Installing the AD services and administration tools...'
 Install-WindowsFeature AD-Domain-Services,RSAT-AD-AdminCenter,RSAT-ADDS-Tools                      
 
+echo 'Installing the AD forest (be patient, this will take more than 30m to install)...'
 Import-Module ADDSDeployment
-
 Install-ADDSForest `
     -InstallDns `
     -CreateDnsDelegation:$false `
