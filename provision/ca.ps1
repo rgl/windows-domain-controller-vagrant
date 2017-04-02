@@ -1,5 +1,3 @@
-$ErrorActionPreference = 'Stop'
-
 # install the AD services and administration tools.
 Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 

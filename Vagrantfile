@@ -35,13 +35,13 @@ Vagrant.configure("2") do |config|
 
     config.vm.network "private_network", ip: "192.168.56.2"
 
-    config.vm.provision "shell", path: "provision/locale.ps1"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["locale.ps1"]
     config.vm.provision :reload
-    config.vm.provision "shell", path: "provision/domain-controller.ps1"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["domain-controller.ps1"]
     config.vm.provision :reload
-    config.vm.provision "shell", path: "provision/domain-controller-configure.ps1"
-    config.vm.provision "shell", path: "provision/ad-explorer.ps1"
-    config.vm.provision "shell", path: "provision/ca.ps1"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["domain-controller-configure.ps1"]
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["ad-explorer.ps1"]
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["ca.ps1"]
     config.vm.provision :reload
-    config.vm.provision "shell", path: "provision/summary.ps1"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["summary.ps1"]
 end

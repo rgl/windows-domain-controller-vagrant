@@ -1,8 +1,3 @@
-$ErrorActionPreference = 'Stop'
-
-#
-# current user.
-
 # set keyboard layout.
 # NB you can get the name from the list:
 #      [System.Globalization.CultureInfo]::GetCultures('InstalledWin32Cultures') | out-gridview

@@ -1,6 +1,3 @@
-$ErrorActionPreference = 'Stop'
-
-
 $domain = 'example.com'
 $netbiosDomain = 'EXAMPLE'
 $safeModeAdminstratorPassword = ConvertTo-SecureString 'HeyH0Password' -AsPlainText -Force
