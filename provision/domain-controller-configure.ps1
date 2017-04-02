@@ -12,7 +12,7 @@ $password = ConvertTo-SecureString -AsPlainText 'HeyH0Password' -Force
 # NB this is needed to install the Enterprise Root Certification Authority.
 Add-ADGroupMember `
     -Identity 'Enterprise Admins' `
-    -Member "CN=vagrant,$usersAdPath"
+    -Members "CN=vagrant,$usersAdPath"
 
 
 # disable all user accounts, except the ones defined here.
@@ -57,7 +57,7 @@ Set-ADUser `
 # add user to the Domain Admins group.
 Add-ADGroupMember `
     -Identity 'Domain Admins' `
-    -Member "CN=$name,$usersAdPath"
+    -Members "CN=$name,$usersAdPath"
 
 
 # add Jane Doe.
