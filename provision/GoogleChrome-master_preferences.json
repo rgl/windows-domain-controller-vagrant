@@ -1,0 +1,34 @@
+{
+  "session": {
+    "restore_on_startup": 1
+  },
+  "bookmark_bar": {
+    "show_on_all_tabs": true
+  },
+  "sync_promo": {
+    "show_on_first_run_allowed": false
+  },
+  "distribution": {
+    "import_bookmarks_from_file": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\master_bookmarks.html",
+    "import_bookmarks": true,
+    "import_history": true,
+    "import_home_page": true,
+    "import_search_engine": true,
+    "suppress_first_run_bubble": true,
+    "do_not_create_desktop_shortcut": true,
+    "do_not_create_quick_launch_shortcut": false,
+    "do_not_launch_chrome": true,
+    "do_not_register_for_update_launch": true,
+    "make_chrome_default": true,
+    "make_chrome_default_for_user": true,
+    "suppress_first_run_default_browser_prompt": false,
+    "system_level": true,
+    "verbose_logging": true
+  },
+  "first_run_tabs": [
+    "chrome://extensions",
+    "chrome://version",
+    "https://github.com/rgl",
+    "https://ruilopes.com"
+  ]
+}
