@@ -1,11 +1,3 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
-# this Vagranfile needs vagrant-reload, you have to install it with:
-#   vagrant plugin install vagrant-reload
-
-Vagrant.require_version ">= 1.8.1"
-
 Vagrant.configure("2") do |config|
     config.vm.box = "windows-2016-amd64"
     config.vm.define "test-node-one"
@@ -17,20 +9,12 @@ Vagrant.configure("2") do |config|
         v.memory = 2048
         v.customize ["modifyvm", :id, "--vram", 64]
         v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
-        v.customize ["storageattach", :id,
-                        "--storagectl", "IDE Controller",
-                        "--device", "0",
-                        "--port", "1",
-                        "--type", "dvddrive",
-                        "--medium", "emptydrive"]
     end
 
     config.vm.network "private_network", ip: "192.168.56.3"
 
+    config.vm.provision "windows-sysprep"
     config.vm.provision "shell", path: "provision/locale.ps1"
-    config.vm.provision :reload
-    config.vm.provision "shell", path: "provision/test-node-one.ps1"
     config.vm.provision "shell", path: "provision/add-to-domain.ps1"
-    config.vm.provision :reload
-    config.vm.provision "shell", path: "provision/show-sid.ps1"
+    config.vm.provision "reload"
 end
