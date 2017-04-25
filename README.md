@@ -57,12 +57,23 @@ You can use a normal LDAP client for acessing the Active Directory.
 
 It accepts the following _Bind DN_ formats:
 
-* `<sAMAccountName>@<DNS domain>`, e.g. `jane.doe@example.com`
+* `<userPrincipalName>@<DNS domain>`, e.g. `jane.doe@example.com`
 * `<sAMAccountName>@<NETBIOS domain>`, e.g. `jane.doe@EXAMPLE`
 * `<NETBIOS domain>\<sAMAccountName>`, e.g. `EXAMPLE\jane.doe`
 * `<DN for an entry with a userPassword attribute>`, e.g. `CN=jane.doe,CN=Users,DC=example,DC=com`
 
-For example, you can list all of the active users using [ldapsearch](http://www.openldap.org/software/man.cgi?query=ldapsearch) as: 
+**NB** `sAMAccountName` MUST HAVE AT MOST 20 characters.
+
+Some attributes are available in environment variables:
+
+| Attribute        | Environment variable | Example             |
+|------------------|----------------------|---------------------|
+| `sAMAccountName` | `USERNAME`           | `jane.doe`          |
+| `sAMAccountName` | `USERPROFILE`        | `C:\Users\jane.doe` |
+| `NETBIOS domain` | `USERDOMAIN`         | `EXAMPLE`           |
+| `DNS domain`     | `USERDNSDOMAIN`      | `EXAMPLE.COM`       |
+
+You can list all of the active users using [ldapsearch](http://www.openldap.org/software/man.cgi?query=ldapsearch) as: 
 
 ```bash
 ldapsearch \
