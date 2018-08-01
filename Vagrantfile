@@ -10,6 +10,16 @@ Vagrant.configure("2") do |config|
     config.winrm.transport = :plaintext
     config.winrm.basic_auth_only = true
 
+    config.vm.provider :libvirt do |lv, config|
+        lv.memory = 2048
+        lv.cpus = 2
+        lv.cpu_mode = 'host-passthrough'
+        lv.keymap = 'pt'
+        # replace the default synced_folder with something that works in the base box.
+        # NB for some reason, this does not work when placed in the base box Vagrantfile.
+        config.vm.synced_folder '.', '/vagrant', type: 'smb', smb_username: ENV['USER'], smb_password: ENV['VAGRANT_SMB_PASSWORD']
+    end
+
     config.vm.provider :virtualbox do |v, override|
         v.linked_clone = true
         v.cpus = 2
@@ -24,7 +34,7 @@ Vagrant.configure("2") do |config|
                         "--medium", "emptydrive"]
     end
 
-    config.vm.network "private_network", ip: "192.168.56.2"
+    config.vm.network "private_network", ip: "192.168.56.2", libvirt__forward_mode: "route", libvirt__dhcp_enabled: false
 
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller.ps1"
     config.vm.provision "reload"

@@ -1,4 +1,3 @@
-
 This is an example on how to create a Windows Domain Controller using Vagrant and PowerShell.
 
 This also shows how to add a Computer to an existing domain using PowerShell.
@@ -30,14 +29,14 @@ vagrant plugin install vagrant-windows-sysprep
 Start by launching the Domain Controller environment:
 
 ```bash
-vagrant up
+vagrant up --provider=virtualbox # or --provider=libvirt
 ```
 
 Launch the Test Node One Computer environment:
 
 ```bash
 cd test-node-one
-vagrant up
+vagrant up --provider=virtualbox # or --provider=libvirt
 ```
 
 Sign-in on the Test Node One Computer with one of the following accounts:
