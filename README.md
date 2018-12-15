@@ -17,7 +17,7 @@ This setup will use the following static IP addresses:
 
 **NB** these are hardcoded in several files. Find then with `grep -r 192.168.56. .`.
 
-Install the [base box](https://github.com/rgl/windows-2016-vagrant).
+Install the [Windows 2019 base box](https://github.com/rgl/windows-2016-vagrant).
 
 Install the required Vagrant plugins:
 
