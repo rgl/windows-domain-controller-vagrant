@@ -22,7 +22,6 @@ Install the [Windows 2019 base box](https://github.com/rgl/windows-2016-vagrant)
 Install the required Vagrant plugins:
 
 ```bash
-vagrant plugin install vagrant-reload
 vagrant plugin install vagrant-windows-sysprep
 ```
 
