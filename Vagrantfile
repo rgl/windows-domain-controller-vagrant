@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller.ps1"
     config.vm.provision "reload"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller-configure.ps1"
-    config.vm.provision "shell", inline: "$env:chocolateyVersion='0.10.11'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex", name: "Install Chocolatey"
+    config.vm.provision "shell", inline: "$env:chocolateyVersion='0.10.13'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex", name: "Install Chocolatey"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "provision-base.ps1"
     config.vm.provision "reload"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "ad-explorer.ps1"
