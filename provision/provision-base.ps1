@@ -116,3 +116,7 @@ cp -Force GoogleChrome-master_bookmarks.html "$chromeLocation\master_bookmarks.h
 
 # replace notepad with notepad2.
 choco install -y notepad2
+
+# set default applications.
+choco install -y SetDefaultBrowser
+SetDefaultBrowser HKLM "Google Chrome"
