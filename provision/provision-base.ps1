@@ -75,7 +75,7 @@ Remove-Item -Force "$env:USERPROFILE\Desktop\desktop.ini"
 Remove-Item -Force "$env:PUBLIC\Desktop\desktop.ini"
 
 # create Desktop shortcuts.
-Import-Module C:\ProgramData\chocolatey\helpers\chocolateyInstaller.psm1
+Import-Module "$env:ChocolateyInstall\helpers\chocolateyInstaller.psm1"
 Remove-Item -Force "$env:USERPROFILE\Desktop\*.lnk"
 Remove-Item -Force "$env:PUBLIC\Desktop\*.lnk"
 Install-ChocolateyShortcut `
@@ -90,6 +90,15 @@ Install-ChocolateyShortcut `
 Install-ChocolateyShortcut `
     -ShortcutFilePath "$env:USERPROFILE\Desktop\AD Explorer.lnk" `
     -TargetPath 'C:\Program Files\ADExplorer\ADExplorer.exe'
+# add MSYS2 shortcut to the Desktop and Start Menu.
+Install-ChocolateyShortcut `
+    -ShortcutFilePath "$env:USERPROFILE\Desktop\MSYS2 Bash.lnk" `
+    -TargetPath "$env:ChocolateyToolsLocation\msys64\mingw64.exe" `
+    -WorkingDirectory '%USERPROFILE%'
+Install-ChocolateyShortcut `
+    -ShortcutFilePath "C:\Users\All Users\Microsoft\Windows\Start Menu\Programs\MSYS2 Bash.lnk" `
+    -TargetPath "$env:ChocolateyToolsLocation\msys64\mingw64.exe" `
+    -WorkingDirectory '%USERPROFILE%'
 
 # restart explorer to apply the changed settings.
 (Get-Process explorer).Kill()

@@ -45,5 +45,6 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "provision/ps.ps1", args: "ad-explorer.ps1"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "ca.ps1"
     config.vm.provision "shell", reboot: true
+    config.vm.provision "shell", path: "provision/ps.ps1", args: "provision-msys2.ps1"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "summary.ps1"
 end

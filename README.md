@@ -6,7 +6,7 @@ This will create an `example.com` Active Directory Domain Forest.
 
 This will also install a Certification Authority with a GPO to automatically enroll
 computers with a certificate signed by the trusted domain CA, Remote Desktop users
-will therefore see and use trusted certificates.  
+will therefore see and use trusted certificates.
 
 This setup will use the following static IP addresses:
 
@@ -71,7 +71,7 @@ Some attributes are available in environment variables:
 | `NETBIOS domain` | `USERDOMAIN`         | `EXAMPLE`           |
 | `DNS domain`     | `USERDNSDOMAIN`      | `EXAMPLE.COM`       |
 
-You can list all of the active users using [ldapsearch](http://www.openldap.org/software/man.cgi?query=ldapsearch) as: 
+You can list all of the active users using [ldapsearch](http://www.openldap.org/software/man.cgi?query=ldapsearch) as:
 
 ```bash
 ldapsearch \
@@ -84,6 +84,8 @@ ldapsearch \
   sAMAccountName userPrincipalName userAccountControl displayName cn mail
 ```
 
+**NB** To have `ldapsearch` you can install the [msys2 mingw-w64-openldap package](https://github.com/msys2/MINGW-packages/tree/master/mingw-w64-openldap) with `pacman -Sy mingw-w64-x86_64-openldap`.
+
 For TLS, use `-H ldaps://dc.example.com`, after creating the `ldaprc` file with:
 
 ```bash
@@ -94,4 +96,11 @@ TLS_REQCERT demand
 EOF
 ```
 
-**NB** For TLS troubleshoot use `echo | openssl s_client -connect dc.example.com:636`.
+Troubleshoot TLS with:
+
+```bash
+# see the TLS certificate validation result:
+echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com -CAfile tmp/ExampleEnterpriseRootCA.pem
+# see the TLS certificate being returned by the server:
+echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com | openssl x509 -noout -text -in -
+```
