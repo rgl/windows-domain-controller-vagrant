@@ -46,6 +46,15 @@ Set-ADUser `
     -PasswordNeverExpires $true
 
 
+# add the sonar-administrators group.
+# NB this is used by https://github.com/rgl/sonarqube-windows-vagrant.
+New-ADGroup `
+    -Path $usersAdPath `
+    -Name 'sonar-administrators' `
+    -GroupCategory 'Security' `
+    -GroupScope 'DomainLocal'
+
+
 # add John Doe.
 $name = 'john.doe'
 New-ADUser `
@@ -66,6 +75,10 @@ Set-ADUser `
 # add user to the Domain Admins group.
 Add-ADGroupMember `
     -Identity 'Domain Admins' `
+    -Members "CN=$name,$usersAdPath"
+# add user to the sonar-administrators group.
+Add-ADGroupMember `
+    -Identity 'sonar-administrators' `
     -Members "CN=$name,$usersAdPath"
 
 
