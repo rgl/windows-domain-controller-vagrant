@@ -24,10 +24,9 @@ Vagrant.configure("2") do |config|
         v.linked_clone = true
         v.cpus = 2
         v.memory = 2048
-        v.customize ["modifyvm", :id, "--vram", 64]
-        v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+        v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
         v.customize ["storageattach", :id,
-                        "--storagectl", "IDE Controller",
+                        "--storagectl", "SATA Controller",
                         "--device", "0",
                         "--port", "1",
                         "--type", "dvddrive",
