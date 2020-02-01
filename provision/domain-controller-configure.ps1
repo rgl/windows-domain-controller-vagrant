@@ -16,6 +16,12 @@ $domainDn = $adDomain.DistinguishedName
 $usersAdPath = "CN=Users,$domainDn"
 $password = ConvertTo-SecureString -AsPlainText 'HeyH0Password' -Force
 
+# remove non-routable virtualbox addresses (are used in the vagrant
+# nat interface) from the ad dns server.
+# TODO this must be done everytime the computer boots.
+Get-DnsServerResourceRecord -ZoneName $domain -Type 1 `
+    | Where-Object {$_.RecordData.IPv4Address -eq '10.0.2.15'} `
+    | Remove-DnsServerResourceRecord -ZoneName $domain -Force
 
 # add the vagrant user to the Enterprise Admins group.
 # NB this is needed to install the Enterprise Root Certification Authority.

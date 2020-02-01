@@ -10,19 +10,23 @@ will therefore see and use trusted certificates.
 
 This setup will use the following static IP addresses:
 
-| IP           | Hostname                  | Description                |
-|--------------|---------------------------|----------------------------|
-| 192.168.56.2 | dc.example.com            | Domain Controller Computer |
-| 192.168.56.3 | test-node-one.example.com | Test Computer              |
+| IP           | Hostname            | Description                |
+|--------------|---------------------|----------------------------|
+| 192.168.56.2 | dc.example.com      | Domain Controller Computer |
+| 192.168.56.3 | windows.example.com | Test Windows Computer      |
+| 192.168.56.4 | ubuntu.example.com  | Test Ubuntu Computer       |
 
 **NB** these are hardcoded in several files. Find then with `grep -r 192.168.56. .`.
 
-Install the [Windows 2019 base box](https://github.com/rgl/windows-2016-vagrant).
+Install the [Windows 2019 base box](https://github.com/rgl/windows-vagrant).
+
+Install the [Ubuntu 18.04 base box](https://github.com/rgl/ubuntu-vagrant).
 
 Install the required Vagrant plugins:
 
 ```bash
 vagrant plugin install vagrant-windows-sysprep
+vagrant plugin install vagrant-reload
 ```
 
 Start by launching the Domain Controller environment:
@@ -31,14 +35,14 @@ Start by launching the Domain Controller environment:
 vagrant up --provider=virtualbox # or --provider=libvirt
 ```
 
-Launch the Test Node One Computer environment:
+Launch the test nodes:
 
 ```bash
-cd test-node-one
+cd test-nodes
 vagrant up --provider=virtualbox # or --provider=libvirt
 ```
 
-Sign-in on the Test Node One Computer with one of the following accounts:
+Sign-in on the test nodes with one of the following accounts:
 
 * Username `john.doe` and password `HeyH0Password`.
   * This account is also a Domain Administrator.

@@ -1,0 +1,66 @@
+Vagrant.configure("2") do |config|
+    config.vm.provider :libvirt do |lv, config|
+        lv.cpus = 2
+        lv.cpu_mode = 'host-passthrough'
+        lv.keymap = 'pt'
+    end
+
+    config.vm.provider :virtualbox do |v, override|
+        v.linked_clone = true
+        v.cpus = 2
+        v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+    end
+
+    config.vm.define "windows" do |config|
+        config.vm.provider :libvirt do |lv, config|
+            lv.memory = 2048
+            # replace the default synced_folder with something that works in the base box.
+            # NB for some reason, this does not work when placed in the base box Vagrantfile.
+            config.vm.synced_folder '.', '/vagrant', type: 'smb', smb_username: ENV['USER'], smb_password: ENV['VAGRANT_SMB_PASSWORD']
+        end
+        config.vm.provider :virtualbox do |v, override|
+            v.memory = 2048
+            v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+        end
+        config.vm.box = "windows-2019-amd64"
+        config.vm.hostname = "windows"
+        config.vm.network "private_network", ip: "192.168.56.3", libvirt__forward_mode: "route", libvirt__dhcp_enabled: false
+        config.vm.provision "windows-sysprep"
+        config.vm.provision "shell", path: "provision/locale.ps1"
+        config.vm.provision "shell", path: "provision/add-to-domain.ps1"
+        config.vm.provision "shell", reboot: true
+    end
+
+    config.vm.define "ubuntu" do |config|
+        config.vm.provider :libvirt do |lv, config|
+            lv.memory = 512
+            config.vm.synced_folder '.', '/vagrant', type: 'nfs'
+        end
+        config.vm.provider :virtualbox do |v, override|
+            v.memory = 512
+        end
+        config.vm.box = "ubuntu-18.04-amd64"
+        config.vm.hostname = "ubuntu.example.com"
+        config.vm.network "private_network", ip: "192.168.56.4", libvirt__forward_mode: "route", libvirt__dhcp_enabled: false
+        config.vm.provision "shell", path: "provision/provision-base.sh"
+        config.vm.provision "shell", path: "provision/add-to-domain.sh"
+        config.vm.provision "reload"
+    end
+
+    config.trigger.before :up do |trigger|
+        trigger.run = {
+            inline: '''bash -euc \'
+certs=(
+    ../tmp/ExampleEnterpriseRootCA.der
+)
+for cert_path in "${certs[@]}"; do
+    if [ -f $cert_path ]; then
+        mkdir -p tmp
+        cp $cert_path tmp
+    fi
+done
+\'
+'''
+        }
+    end
+end

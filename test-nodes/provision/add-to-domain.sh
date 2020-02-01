@@ -1,0 +1,138 @@
+#!/bin/bash
+set -eux
+
+# NB the sssd configuration was based on:
+#       https://www.youtube.com/watch?v=BvqdU6FZblw
+#       https://nerdonthestreet.com/wiki?find=Authenticate+Ubuntu+19.04+against+Active+Directory
+
+# prevent apt-get et al from asking questions.
+# NB even with this, you'll still get some warnings that you can ignore:
+#     dpkg-preconfigure: unable to re-open stdin: No such file or directory
+export DEBIAN_FRONTEND=noninteractive
+
+# make sure we can can resolve the dc dns domain name.
+echo '192.168.56.2 dc.example.com' >>/etc/hosts
+
+# trust the ad ca.
+openssl x509 \
+    -inform der \
+    -in /vagrant/tmp/ExampleEnterpriseRootCA.der \
+    -out /usr/local/share/ca-certificates/ExampleEnterpriseRootCA.crt
+update-ca-certificates --verbose
+
+# these anwsers were obtained (after installing heimdal-clients) with:
+#
+#   #sudo debconf-show postfix
+#   sudo apt-get install debconf-utils
+#   # this way you can see the comments:
+#   sudo debconf-get-selections
+#   # this way you can just see the values needed for debconf-set-selections:
+#   sudo debconf-get-selections | grep -E '^krb5-config\s+' | sort
+# NB these are not really used as we create the entire krb5.conf bellow.
+debconf-set-selections<<EOF
+krb5-config krb5-config/default_realm string EXAMPLE.COM
+krb5-config krb5-config/kerberos_servers string dc.example.com
+krb5-config krb5-config/admin_server string dc.example.com
+EOF
+apt-get install -y sssd heimdal-clients msktutil
+
+# set configuration.
+cat >/etc/krb5.conf <<'EOF'
+[libdefaults]
+default_realm = EXAMPLE.COM
+rdns = no
+dns_lookup_kdc = true
+dns_lookup_realm = true
+
+[realms]
+EXAMPLE.COM = {
+    kdc = dc.example.com
+    admin_server = dc.example.com
+}
+EOF
+
+# add this computer to the ad.
+kinit --password-file=STDIN administrator <<'EOF'
+HeyH0Password
+EOF
+msktutil \
+    --create \
+    --keytab /etc/sssd/sssd.keytab \
+    --no-reverse-lookups \
+    --server dc.example.com \
+    --user-creds-only
+ldapmodify \
+    -h dc.example.com \
+    <<EOF
+dn: CN=ubuntu,CN=Computers,DC=example,DC=com
+changeType: modify
+replace: operatingSystem
+operatingSystem: $(bash -c 'source /etc/os-release && echo $NAME')
+-
+replace: operatingSystemVersion
+operatingSystemVersion: $(bash -c 'source /etc/os-release && echo $VERSION')
+-
+EOF
+ldapsearch \
+  -h dc.example.com \
+  -b CN=Computers,DC=example,DC=com \
+  '(objectClass=computer)'
+ktutil --keytab=/etc/sssd/sssd.keytab list
+kdestroy
+
+# configure sssd with this computer domain and keytab.
+# see sssd(8)
+# see sssd.conf(5)
+# see sssd-ad(5)
+# see sssd-ldap(5)
+cat >/etc/sssd/sssd.conf <<'EOF'
+[sssd]
+config_file_version = 2
+services = nss, pam
+domains = example.com
+
+[nss]
+entry_negative_timeout = 0
+#debug_level = 5
+
+[pam]
+#debug_level = 5
+
+[domain/example.com]
+#debug_level = 10
+enumerate = false
+id_provider = ad
+auth_provider = ad
+chpass_provider = ad
+access_provider = ad
+dyndns_update = false
+fallback_homedir = /home/%u
+default_shell = /bin/bash
+ad_server = dc.example.com
+ad_domain = example.com
+ldap_schema = ad
+ldap_id_mapping = true
+ldap_sasl_mech = gssapi
+ldap_krb5_init_creds = true
+krb5_keytab = /etc/sssd/sssd.keytab
+EOF
+chmod 0600 /etc/sssd/sssd.conf
+
+# restart sssd to apply the configuration.
+systemctl restart sssd
+
+# configure pam to automatically create the home directory.
+sed -i -E 's,^(session\s+required\s+pam_unix.so.*),\1\nsession required pam_mkhomedir.so skel=/etc/skel umask=0077,g' /etc/pam.d/common-session
+
+# allow domain administrators to use sudo without asking for password.
+cat >/etc/sudoers.d/domain-admins <<'EOF'
+# Allow members of the domain admins group to execute
+# any command (as root) without asking for password.
+%domain\ admins ALL=(ALL) NOPASSWD:ALL
+EOF
+chmod 0440 /etc/sudoers.d/domain-admins
+
+# show domain users.
+id administrator
+id john.doe
+id jane.doe
