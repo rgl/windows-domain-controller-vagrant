@@ -16,12 +16,33 @@ $domainDn = $adDomain.DistinguishedName
 $usersAdPath = "CN=Users,$domainDn"
 $password = ConvertTo-SecureString -AsPlainText 'HeyH0Password' -Force
 
-# remove non-routable virtualbox addresses (are used in the vagrant
-# nat interface) from the ad dns server.
-# TODO this must be done everytime the computer boots.
+
+# remove the non-routable vagrant nat ip address from dns.
+# NB this is needed to prevent the non-routable ip address from
+#    being registered in the dns server.
+# NB the nat interface is the first dhcp interface of the machine.
+$vagrantNatAdapter = Get-NetAdapter -Physical `
+    | Where-Object {$_ | Get-NetIPAddress | Where-Object {$_.PrefixOrigin -eq 'Dhcp'}} `
+    | Sort-Object -Property Name `
+    | Select-Object -First 1
+$vagrantNatIpAddress = ($vagrantNatAdapter | Get-NetIPAddress).IPv4Address
+# remove the $domain nat ip address resource records from dns.
+$vagrantNatAdapter | Set-DnsClient -RegisterThisConnectionsAddress $false
 Get-DnsServerResourceRecord -ZoneName $domain -Type 1 `
-    | Where-Object {$_.RecordData.IPv4Address -eq '10.0.2.15'} `
+    | Where-Object {$_.RecordData.IPv4Address -eq $vagrantNatIpAddress} `
     | Remove-DnsServerResourceRecord -ZoneName $domain -Force
+# disable ipv6.
+$vagrantNatAdapter | Disable-NetAdapterBinding -ComponentID ms_tcpip6
+# remove the dc.$domain nat ip address resource record from dns.
+$dnsServerSettings = Get-DnsServerSetting -All
+$dnsServerSettings.ListeningIPAddress = @(
+        $dnsServerSettings.ListeningIPAddress `
+            | Where-Object {$_ -ne $vagrantNatIpAddress}
+    )
+Set-DnsServerSetting $dnsServerSettings
+# flush the dns client cache.
+Clear-DnsClientCache
+
 
 # add the vagrant user to the Enterprise Admins group.
 # NB this is needed to install the Enterprise Root Certification Authority.
