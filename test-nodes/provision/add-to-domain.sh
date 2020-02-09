@@ -68,7 +68,7 @@ msktutil \
 ldapmodify \
     -h dc.$domain \
     <<EOF
-dn: CN=ubuntu,CN=Computers,$domain_dn
+dn: CN=$(hostname),CN=Computers,$domain_dn
 changeType: modify
 replace: operatingSystem
 operatingSystem: $(bash -c 'source /etc/os-release && echo $NAME')
@@ -110,7 +110,7 @@ auth_provider = ad
 chpass_provider = ad
 access_provider = ad
 dyndns_update = false
-fallback_homedir = /home/%u
+fallback_homedir = /home/%d/%u
 default_shell = /bin/bash
 ad_server = dc.$domain
 ad_domain = $domain
@@ -137,6 +137,6 @@ EOF
 chmod 0440 /etc/sudoers.d/domain-admins
 
 # show domain users.
-id administrator
-id john.doe
-id jane.doe
+id administrator; getent passwd administrator
+id john.doe; getent passwd john.doe
+id jane.doe; getent passwd jane.doe
