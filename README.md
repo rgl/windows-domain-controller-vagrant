@@ -108,3 +108,21 @@ echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com -
 # see the TLS certificate being returned by the server:
 echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com | openssl x509 -noout -text -in -
 ```
+
+# Active Directory DNS
+
+You can update the DNS zone using the computer principal credentials, e.g.:
+
+```bash
+kinit --keytab=/etc/sssd/sssd.keytab 'ubuntu$'
+nsupdate -g <<'EOF'
+server dc.example.com
+zone example.com.
+update delete ubuntu.example.com. in A
+update add ubuntu.example.com. 60 in A 192.168.56.4
+update delete ubuntu.example.com. in TXT
+update add ubuntu.example.com. 60 in TXT "hello world"
+send
+EOF
+kdestroy
+```
