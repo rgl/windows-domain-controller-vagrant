@@ -1,5 +1,9 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
+
+domain="${1:-example.com}"; shift
+domain_ip="${1:-192.168.56.2}"; shift
+domain_dn="DC=$(echo $domain | sed -E 's/\./,DC=/g')"
 
 # NB the sssd configuration was based on:
 #       https://www.youtube.com/watch?v=BvqdU6FZblw
@@ -11,7 +15,7 @@ set -eux
 export DEBIAN_FRONTEND=noninteractive
 
 # make sure we can can resolve the dc dns domain name.
-echo '192.168.56.2 dc.example.com' >>/etc/hosts
+echo "$domain_ip dc.$domain" >>/etc/hosts
 
 # trust the ad ca.
 openssl x509 \
@@ -30,24 +34,24 @@ update-ca-certificates --verbose
 #   sudo debconf-get-selections | grep -E '^krb5-config\s+' | sort
 # NB these are not really used as we create the entire krb5.conf bellow.
 debconf-set-selections<<EOF
-krb5-config krb5-config/default_realm string EXAMPLE.COM
-krb5-config krb5-config/kerberos_servers string dc.example.com
-krb5-config krb5-config/admin_server string dc.example.com
+krb5-config krb5-config/default_realm string ${domain^^}
+krb5-config krb5-config/kerberos_servers string dc.$domain
+krb5-config krb5-config/admin_server string dc.$domain
 EOF
 apt-get install -y sssd heimdal-clients msktutil
 
 # set configuration.
-cat >/etc/krb5.conf <<'EOF'
+cat >/etc/krb5.conf <<EOF
 [libdefaults]
-default_realm = EXAMPLE.COM
+default_realm = ${domain^^}
 rdns = no
 dns_lookup_kdc = true
 dns_lookup_realm = true
 
 [realms]
-EXAMPLE.COM = {
-    kdc = dc.example.com
-    admin_server = dc.example.com
+${domain^^} = {
+    kdc = dc.$domain
+    admin_server = dc.$domain
 }
 EOF
 
@@ -59,12 +63,12 @@ msktutil \
     --create \
     --keytab /etc/sssd/sssd.keytab \
     --no-reverse-lookups \
-    --server dc.example.com \
+    --server dc.$domain \
     --user-creds-only
 ldapmodify \
-    -h dc.example.com \
+    -h dc.$domain \
     <<EOF
-dn: CN=ubuntu,CN=Computers,DC=example,DC=com
+dn: CN=ubuntu,CN=Computers,$domain_dn
 changeType: modify
 replace: operatingSystem
 operatingSystem: $(bash -c 'source /etc/os-release && echo $NAME')
@@ -74,8 +78,8 @@ operatingSystemVersion: $(bash -c 'source /etc/os-release && echo $VERSION')
 -
 EOF
 ldapsearch \
-  -h dc.example.com \
-  -b CN=Computers,DC=example,DC=com \
+  -h dc.$domain \
+  -b CN=Computers,$domain_dn \
   '(objectClass=computer)'
 ktutil --keytab=/etc/sssd/sssd.keytab list
 kdestroy
@@ -85,11 +89,11 @@ kdestroy
 # see sssd.conf(5)
 # see sssd-ad(5)
 # see sssd-ldap(5)
-cat >/etc/sssd/sssd.conf <<'EOF'
+cat >/etc/sssd/sssd.conf <<EOF
 [sssd]
 config_file_version = 2
 services = nss, pam
-domains = example.com
+domains = $domain
 
 [nss]
 entry_negative_timeout = 0
@@ -98,7 +102,7 @@ entry_negative_timeout = 0
 [pam]
 #debug_level = 5
 
-[domain/example.com]
+[domain/$domain]
 #debug_level = 10
 enumerate = false
 id_provider = ad
@@ -108,8 +112,8 @@ access_provider = ad
 dyndns_update = false
 fallback_homedir = /home/%u
 default_shell = /bin/bash
-ad_server = dc.example.com
-ad_domain = example.com
+ad_server = dc.$domain
+ad_domain = $domain
 ldap_schema = ad
 ldap_id_mapping = true
 ldap_sasl_mech = gssapi

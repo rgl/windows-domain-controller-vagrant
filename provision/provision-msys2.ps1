@@ -1,3 +1,7 @@
+$adDomain = Get-ADDomain
+$domain = $adDomain.DNSRoot
+$domainDn = $adDomain.DistinguishedName
+
 choco install -y msys2
 
 # update $env:PATH et all.
@@ -46,12 +50,12 @@ function Bash($script) {
 }
 
 # configure the shell.
-Bash @'
+Bash @"
 pacman --noconfirm -Sy vim
 
 cat>~/.bash_history<<"EOF"
-ldapsearch -H ldap://dc.example.com -D jane.doe@example.com -w HeyH0Password -x -LLL -b CN=Users,DC=example,DC=com '(&(objectClass=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))' sAMAccountName userPrincipalName userAccountControl displayName cn mail
-ldapsearch -H ldaps://dc.example.com -D jane.doe@example.com -w HeyH0Password -x -LLL -b CN=Users,DC=example,DC=com '(&(objectClass=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))' sAMAccountName userPrincipalName userAccountControl displayName cn mail
+ldapsearch -H ldap://dc.$domain -D jane.doe@$domain -w HeyH0Password -x -LLL -b CN=Users,$domainDn '(&(objectClass=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))' sAMAccountName userPrincipalName userAccountControl displayName cn mail
+ldapsearch -H ldaps://dc.$domain -D jane.doe@$domain -w HeyH0Password -x -LLL -b CN=Users,$domainDn '(&(objectClass=person)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))' sAMAccountName userPrincipalName userAccountControl displayName cn mail
 EOF
 
 cat>~/.bash_profile<<"EOF"
@@ -104,7 +108,7 @@ autocmd FileType go set tabstop=4 shiftwidth=4 smarttab expandtab softtabstop=4 
 " Automatically indent a line that starts with the following words (after we press ENTER).
 autocmd FileType go set smartindent cinwords=if,else,switch,for,func
 EOF
-'@
+"@
 
 # install the ldap utilities (e.g. ldapsearch)
 Bash @'

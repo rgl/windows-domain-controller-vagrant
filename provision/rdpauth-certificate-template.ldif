@@ -1,11 +1,11 @@
-dn: CN=RDPAuth,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=example,DC=com
+dn: CN=RDPAuth,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,@@DOMAIN_DN@@
 changetype: add
 objectClass: top
 objectClass: pKICertificateTemplate
 cn: RDPAuth
 distinguishedName: 
  CN=RDPAuth,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Conf
- iguration,DC=example,DC=com
+ iguration,@@DOMAIN_DN@@
 instanceType: 4
 whenCreated: 20160507125417.0Z
 whenChanged: 20160507125417.0Z
@@ -18,7 +18,7 @@ objectGUID:: IHNK8yKOiU2W42Ga6NKiHg==
 flags: 131680
 revision: 100
 objectCategory: 
- CN=PKI-Certificate-Template,CN=Schema,CN=Configuration,DC=example,DC=com
+ CN=PKI-Certificate-Template,CN=Schema,CN=Configuration,@@DOMAIN_DN@@
 pKIDefaultKeySpec: 1
 pKIKeyUsage:: oAA=
 pKIMaxIssuingDepth: 0

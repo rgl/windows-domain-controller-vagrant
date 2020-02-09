@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:

@@ -1,7 +1,9 @@
-$ErrorActionPreference = 'Stop'
+param(
+    $domain = 'example.com',
+    $domainControllerIp = '192.168.56.2'
+)
 
-$domain = 'example.com'
-$domainControllerIp = '192.168.56.2'
+$ErrorActionPreference = 'Stop'
 
 
 # use the DNS server from the Domain Controller machine.

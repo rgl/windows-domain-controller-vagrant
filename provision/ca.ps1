@@ -1,6 +1,7 @@
 # install the AD services and administration tools.
 Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 
+$domainDn = (Get-ADDomain).DistinguishedName
 $caCommonName = 'Example Enterprise Root CA'
 
 # configure the CA DN using the default DN suffix (which is based on the
@@ -37,13 +38,13 @@ dir Cert:\LocalMachine\My -DnsName $caCommonName `
 #   $certificateTemplatesDn = "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,$domainDn"
 #   ldifde -f c:/vagrant/rdpauth-certificate-template.ldif -d "CN=RDPAuth,$certificateTemplatesDn"
 (Get-Content c:/vagrant/provision/rdpauth-certificate-template.ldif) `
+    -replace '@@DOMAIN_DN@@',$domainDn `
     -replace 'when(Created|Changed):.+','' `
     -replace 'uSN(Created|Changed):.+','' `
     -replace 'objectGUID:.+','' `
     -notmatch '^$' `
     | Set-Content c:/tmp/rdpauth-certificate-template.ldif
 # get the ACL from the existing Machine Certificate Template.
-$domainDn = (Get-ADDomain).DistinguishedName
 $certificateTemplatesDn = "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,$domainDn"
 ldifde -f c:/tmp/machine-certificate-template-sd.ldif -d "CN=Machine,$certificateTemplatesDn" -l nTSecurityDescriptor
 Get-Content c:/tmp/machine-certificate-template-sd.ldif `

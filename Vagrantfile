@@ -1,3 +1,6 @@
+$domain = "example.com"
+$domain_ip_address = "192.168.56.2"
+
 Vagrant.configure("2") do |config|
     config.vm.box = "windows-2019-amd64"
     config.vm.define "windows-domain-controller"
@@ -33,9 +36,9 @@ Vagrant.configure("2") do |config|
                         "--medium", "emptydrive"]
     end
 
-    config.vm.network "private_network", ip: "192.168.56.2", libvirt__forward_mode: "route", libvirt__dhcp_enabled: false
+    config.vm.network "private_network", ip: $domain_ip_address, libvirt__forward_mode: "route", libvirt__dhcp_enabled: false
 
-    config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller.ps1"
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["domain-controller.ps1", $domain]
     config.vm.provision "shell", reboot: true
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller-configure.ps1"
     config.vm.provision "shell", inline: "$env:chocolateyVersion='0.10.15'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex", name: "Install Chocolatey"

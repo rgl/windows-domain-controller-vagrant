@@ -1,5 +1,9 @@
-$domain = 'example.com'
-$netbiosDomain = 'EXAMPLE'
+param(
+    $domain = 'example.com'
+)
+
+$netbiosDomain = ($domain -split '\.')[0].ToUpperInvariant()
+
 $safeModeAdminstratorPassword = ConvertTo-SecureString 'HeyH0Password' -AsPlainText -Force
 
 # make sure the Administrator has a password that meets the minimum Windows
