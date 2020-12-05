@@ -52,6 +52,19 @@ Sign-in on the test nodes with one of the following accounts:
 * Username `.\vagrant` and password `password`.
   * **NB** you MUST use the **local** `vagrant` account. because the domain also has a `vagrant` account, and that will mess-up the local one...
 
+You can login at the machine console.
+
+You can login with remote desktop, e.g.:
+
+```bash
+xfreerdp /v:192.168.56.2 /u:john.doe /p:HeyH0Password /size:1440x900 +clipboard
+```
+
+You can login with ssh, e.g.:
+
+```bash
+ssh john.doe@192.168.56.2
+```
 
 # Active Directory LDAP
 
