@@ -9,7 +9,7 @@
     "show_on_first_run_allowed": false
   },
   "distribution": {
-    "import_bookmarks_from_file": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\master_bookmarks.html",
+    "import_bookmarks_from_file": "C:\\Program Files\\Google\\Chrome\\Application\\master_bookmarks.html",
     "import_bookmarks": true,
     "import_history": true,
     "import_home_page": true,

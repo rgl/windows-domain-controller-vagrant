@@ -118,8 +118,8 @@ New-Item -Path HKCU:Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetSt
 # install Google Chrome.
 # see https://www.chromium.org/administrators/configuring-other-preferences
 choco install -y googlechrome
-$chromeLocation = 'C:\Program Files (x86)\Google\Chrome\Application'
-cp -Force GoogleChrome-external_extensions.json (Get-Item "$chromeLocation\*\default_apps\external_extensions.json").FullName
+$chromeLocation = 'C:\Program Files\Google\Chrome\Application'
+cp -Force GoogleChrome-external_extensions.json (Resolve-Path "$chromeLocation\*\default_apps\external_extensions.json")
 cp -Force GoogleChrome-master_preferences.json "$chromeLocation\master_preferences"
 cp -Force GoogleChrome-master_bookmarks.html "$chromeLocation\master_bookmarks.html"
 
