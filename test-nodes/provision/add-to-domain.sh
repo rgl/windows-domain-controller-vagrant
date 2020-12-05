@@ -26,7 +26,7 @@ update-ca-certificates --verbose
 
 # these anwsers were obtained (after installing heimdal-clients) with:
 #
-#   #sudo debconf-show postfix
+#   #sudo debconf-show krb5-config
 #   sudo apt-get install debconf-utils
 #   # this way you can see the comments:
 #   sudo debconf-get-selections
@@ -38,7 +38,7 @@ krb5-config krb5-config/default_realm string ${domain^^}
 krb5-config krb5-config/kerberos_servers string dc.$domain
 krb5-config krb5-config/admin_server string dc.$domain
 EOF
-apt-get install -y sssd heimdal-clients msktutil
+apt-get install -y sssd sssd-tools heimdal-clients msktutil
 
 # set configuration.
 cat >/etc/krb5.conf <<EOF
@@ -89,11 +89,13 @@ kdestroy
 # see sssd.conf(5)
 # see sssd-ad(5)
 # see sssd-ldap(5)
+# see /var/log/sssd/sssd.log
+install -o root -g root -m 600 /dev/null /etc/sssd/sssd.conf
 cat >/etc/sssd/sssd.conf <<EOF
 [sssd]
 config_file_version = 2
-services = nss, pam
 domains = $domain
+#debug_level = 10
 
 [nss]
 entry_negative_timeout = 0
@@ -120,10 +122,19 @@ ldap_sasl_mech = gssapi
 ldap_krb5_init_creds = true
 krb5_keytab = /etc/sssd/sssd.keytab
 EOF
-chmod 0600 /etc/sssd/sssd.conf
+
+# validate the configuration.
+sssctl config-check
 
 # restart sssd to apply the configuration.
-systemctl restart sssd
+# NB for some unknown reason sssd takes some retries to start.
+while true; do
+    if systemctl restart sssd; then
+        break
+    fi
+    sleep 10
+done
+systemctl status sssd
 
 # configure pam to automatically create the home directory.
 sed -i -E 's,^(session\s+required\s+pam_unix.so.*),\1\nsession required pam_mkhomedir.so skel=/etc/skel umask=0077,g' /etc/pam.d/common-session

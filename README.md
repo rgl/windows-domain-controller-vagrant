@@ -20,7 +20,7 @@ This setup will use the following static IP addresses:
 
 Install the [Windows 2019 base box](https://github.com/rgl/windows-vagrant).
 
-Install the [Ubuntu 18.04 base box](https://github.com/rgl/ubuntu-vagrant).
+Install the [Ubuntu 20.04 base box](https://github.com/rgl/ubuntu-vagrant).
 
 Install the required Vagrant plugins:
 
