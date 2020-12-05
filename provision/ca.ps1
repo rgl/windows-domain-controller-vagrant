@@ -1,9 +1,14 @@
 # install the AD services and administration tools.
 Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Install-Module -Name PSPKI -Force
+
+# install the PSPKI module.
+# see https://github.com/PKISolutions/PSPKI
+# see https://www.powershellgallery.com/packages/PSPKI/3.7.2
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
+Install-Module -Name PSPKI -Force | Out-Null
 Import-Module PSPKI
+
 
 $domainDn = (Get-ADDomain).DistinguishedName
 $caCommonName = 'Example Enterprise Root CA'
@@ -14,7 +19,7 @@ $caCommonName = 'Example Enterprise Root CA'
 #   CN=Example Enterprise Root CA,DC=example,DC=com
 #
 # NB to install a EnterpriseRootCa the current user must be on the
-#    Enterprise Admins group. 
+#    Enterprise Admins group.
 Install-AdcsCertificationAuthority `
     -CAType EnterpriseRootCa `
     -CACommonName $caCommonName `
@@ -58,26 +63,8 @@ ldifde -f c:/tmp/rdpauth-certificate-template.ldif -i
 
 
 # add the template to the CA.
-#
-# NB the just added template is not immediately available. it will
-#    only be available when something decides to poll the AD.
-#    e.g. it works immediatelly when you open the Certification
-#    Authority UI and select the `Certificate Templates node`... but
-#    I don't known how to do that here...
-# NB the polling interval seem to be 10 minutes (600 seconds).
-# NB restarting the Active Directory Certificate Services does not
-#    seem do the trick.
-# NB restarting Windows does not do the trick either.
 echo 'Adding the Certificate Template to the CA'
-while ($true) {
-    try {
-        Get-CertificationAuthority | Get-CATemplate | Add-CATemplate -Name "RDPAuth" | Set-CATemplate
-        break
-    } catch {
-        #echo "The CA has not yet refreshed the Available Certificate Templates: $($_.Exception)" 
-        Sleep 10
-    }
-}
+Get-CertificationAuthority | Get-CATemplate | Add-CATemplate -Name RDPAuth | Set-CATemplate | Out-Null
 
 
 # save the GPO before we do any changes.
