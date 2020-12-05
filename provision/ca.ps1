@@ -1,6 +1,10 @@
 # install the AD services and administration tools.
 Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Module -Name PSPKI -Force
+Import-Module PSPKI
+
 $domainDn = (Get-ADDomain).DistinguishedName
 $caCommonName = 'Example Enterprise Root CA'
 
@@ -67,7 +71,7 @@ ldifde -f c:/tmp/rdpauth-certificate-template.ldif -i
 echo 'Adding the Certificate Template to the CA'
 while ($true) {
     try {
-        Add-CATemplate -Name 'RDPAuth' -Force
+        Get-CertificationAuthority | Get-CATemplate | Add-CATemplate -Name "RDPAuth" | Set-CATemplate
         break
     } catch {
         #echo "The CA has not yet refreshed the Available Certificate Templates: $($_.Exception)" 
