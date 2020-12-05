@@ -1,7 +1,7 @@
 # install Active Directory Explorer from https://technet.microsoft.com/en-us/sysinternals/adexplorer.aspx
 # NB even though you can use the Windows ADSI Edit application, I find ADExplorer nicer.
 $adExplorerUrl = 'https://download.sysinternals.com/files/AdExplorer.zip'
-$adExplorerHash = '97EF5001C225A869AE739C15AAB1E067B66CE85250FF4D3C265BBFAF09AC8308'
+$adExplorerHash = '3f4137464df5156c629c8e1827151cbfc7fa99cc10c43e187d7899e6500791ec'
 $adExplorer = 'c:/tmp/AdExplorer.zip' 
 (New-Object System.Net.WebClient).DownloadFile($adExplorerUrl, $adExplorer)
 $adExplorerActualHash = (Get-FileHash $adExplorer -Algorithm SHA256).Hash
