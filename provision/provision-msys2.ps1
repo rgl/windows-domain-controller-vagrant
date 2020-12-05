@@ -2,7 +2,7 @@ $adDomain = Get-ADDomain
 $domain = $adDomain.DNSRoot
 $domainDn = $adDomain.DistinguishedName
 
-choco install -y msys2
+choco install -y msys2 --params '/NoPath'
 
 # update $env:PATH et all.
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyInstaller.psm1"
