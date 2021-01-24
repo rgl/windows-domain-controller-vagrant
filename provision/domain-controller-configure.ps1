@@ -14,7 +14,17 @@ $adDomain = Get-ADDomain
 $domain = $adDomain.DNSRoot
 $domainDn = $adDomain.DistinguishedName
 $usersAdPath = "CN=Users,$domainDn"
+$msaAdPath = "CN=Managed Service Accounts,$domainDn"
 $password = ConvertTo-SecureString -AsPlainText 'HeyH0Password' -Force
+
+
+# configure the AD to allow the use of Group Managed Service Accounts (gMSA).
+# see https://docs.microsoft.com/en-us/windows-server/security/group-managed-service-accounts/group-managed-service-accounts-overview
+# see https://docs.microsoft.com/en-us/windows-server/security/group-managed-service-accounts/create-the-key-distribution-services-kds-root-key
+# NB we cannot use -EffectiveImmediately because it would still wait 10h for
+#    the KDS root key to propagate, instead, we force the time to 10h ago to
+#    make it really immediate.
+Add-KdsRootKey -EffectiveTime (Get-Date).AddHours(-10) | Out-Null
 
 
 # remove the non-routable vagrant nat ip address from dns.
@@ -71,6 +81,34 @@ Set-ADAccountPassword `
 Set-ADUser `
     -Identity "CN=Administrator,$usersAdPath" `
     -PasswordNeverExpires $true
+
+
+# add the whoami group Managed Service Account (gMSA).
+# NB computer principals (or security group of computer principals) need
+#    to be explicitly allowed to use the gMSA with one of the following
+#    cmdlets:
+#       Set-ADServiceAccount
+#       Add-ADComputerServiceAccount
+# NB you can use this account to run a windows service by using the
+#    EXAMPLE\whoami$ account name and an empty password.
+$msaName = 'whoami'
+New-ADServiceAccount `
+    -Path $msaAdPath `
+    -DNSHostName $domain `
+    -Name $msaName
+# allow any domain controller/computer the use the gMSA.
+# NB to known which security groups this computer is member of, execute:
+#       Get-ADPrincipalGroupMembership "$env:COMPUTERNAME`$"
+Set-ADServiceAccount `
+    -Identity $msaName `
+    -PrincipalsAllowedToRetrieveManagedPassword @(
+        ,"CN=Domain Controllers,$usersAdPath"
+        ,"CN=Domain Computers,$usersAdPath"
+    )
+# test whether this computer can use the gMSA.
+Test-ADServiceAccount `
+    -Identity $msaName `
+    | Out-Null
 
 
 # add the sonar-administrators group.
@@ -156,4 +194,12 @@ Get-ADGroupMember `
 echo 'Enabled Domain User Accounts'
 Get-ADUser -Filter {Enabled -eq $true} `
     | Select-Object Name,DistinguishedName,SID `
+    | Format-Table -AutoSize | Out-String -Width 2000
+
+
+echo 'Enabled Group Managed Service Accounts (gMSA)'
+Get-ADServiceAccount `
+    -Filter {Enabled -eq $true} `
+    -Properties Name,DistinguishedName,SID,PrincipalsAllowedToRetrieveManagedPassword `
+    | Select-Object Name,DistinguishedName,SID,PrincipalsAllowedToRetrieveManagedPassword `
     | Format-Table -AutoSize | Out-String -Width 2000
