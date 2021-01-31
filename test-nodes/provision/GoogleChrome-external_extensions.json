@@ -1,0 +1,10 @@
+{
+  // JSON Formatter (https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
+  "bcjindcccaagfpapjjmafapmmgkkhgoa": {
+    "external_update_url": "https://clients2.google.com/service/update2/crx"
+  },
+  // uBlock Origin (https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm).
+  "cjpalhdlnbpafiamejdnhcphjbkeiagm": {
+    "external_update_url": "https://clients2.google.com/service/update2/crx"
+  }
+}
