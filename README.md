@@ -141,3 +141,39 @@ send
 EOF
 kdestroy
 ```
+
+# Hyper-V Usage
+
+Follow the [rgl/windows-vagrant Hyper-V Usage section](https://github.com/rgl/windows-vagrant#hyper-v-usage).
+
+Create the required virtual switches:
+
+```bash
+PowerShell -NoLogo -NoProfile -ExecutionPolicy Bypass <<'EOF'
+@(
+  @{Name='windows-domain-controller'; IpAddress='192.168.56.1'}
+) | ForEach-Object {
+  $switchName = $_.Name
+  $switchIpAddress = $_.IpAddress
+  $networkAdapterName = "vEthernet ($switchName)"
+  $networkAdapterIpAddress = $switchIpAddress
+  $networkAdapterIpPrefixLength = 24
+
+  # create the vSwitch.
+  New-VMSwitch -Name $switchName -SwitchType Internal | Out-Null
+
+  # assign it an host IP address.
+  $networkAdapter = Get-NetAdapter $networkAdapterName
+  $networkAdapter | New-NetIPAddress `
+    -IPAddress $networkAdapterIpAddress `
+    -PrefixLength $networkAdapterIpPrefixLength `
+    | Out-Null
+}
+
+# remove all virtual switches from the windows firewall.
+Set-NetFirewallProfile `
+  -DisabledInterfaceAliases (
+        Get-NetAdapter -name "vEthernet*" | Where-Object {$_.ifIndex}
+    ).InterfaceAlias
+EOF
+```

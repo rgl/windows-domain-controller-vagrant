@@ -3,3 +3,4 @@
 package/
 tmp/
 ldaprc
+secrets*

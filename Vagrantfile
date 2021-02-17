@@ -1,3 +1,6 @@
+# to be able to configure hyper-v vm.
+ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
+
 $domain = "example.com"
 $domain_ip_address = "192.168.56.2"
 
@@ -36,8 +39,53 @@ Vagrant.configure("2") do |config|
                         "--medium", "emptydrive"]
     end
 
-    config.vm.network "private_network", ip: $domain_ip_address, libvirt__forward_mode: "route", libvirt__dhcp_enabled: false
+    config.vm.provider :hyperv do |hv, config|
+        hv.linked_clone = true
+        hv.enable_virtualization_extensions = false # nested virtualization.
+        hv.cpus = 2
+        hv.memory = 2048
+        hv.vlan_id = ENV['HYPERV_VLAN_ID']
+        # set the management network adapter.
+        # see https://github.com/hashicorp/vagrant/issues/7915
+        # see https://github.com/hashicorp/vagrant/blob/10faa599e7c10541f8b7acf2f8a23727d4d44b6e/plugins/providers/hyperv/action/configure.rb#L21-L35
+        config.vm.network :private_network,
+            bridge: ENV['HYPERV_SWITCH_NAME'] if ENV['HYPERV_SWITCH_NAME']
+        config.vm.synced_folder '.', '/vagrant',
+            type: 'smb',
+            smb_username: ENV['VAGRANT_SMB_USERNAME'] || ENV['USER'],
+            smb_password: ENV['VAGRANT_SMB_PASSWORD']
+        # further configure the VM (e.g. manage the network adapters).
+        config.trigger.before :'VagrantPlugins::HyperV::Action::StartInstance', type: :action do |trigger|
+            trigger.ruby do |env, machine|
+                # see https://github.com/hashicorp/vagrant/blob/v2.2.10/lib/vagrant/machine.rb#L13
+                # see https://github.com/hashicorp/vagrant/blob/v2.2.10/plugins/kernel_v2/config/vm.rb#L716
+                bridges = machine.config.vm.networks.select{|type, options| type == :private_network && options.key?(:hyperv__bridge)}.map do |type, options|
+                    mac_address_spoofing = false
+                    mac_address_spoofing = options[:hyperv__mac_address_spoofing] if options.key?(:hyperv__mac_address_spoofing)
+                    [options[:hyperv__bridge], mac_address_spoofing]
+                end
+                system(
+                    'PowerShell',
+                    '-NoLogo',
+                    '-NoProfile',
+                    '-ExecutionPolicy',
+                    'Bypass',
+                    '-File',
+                    'provision/configure-hyperv-host.ps1',
+                    machine.id,
+                    bridges.to_json
+                )
+            end
+        end
+    end
 
+    config.vm.network "private_network",
+        ip: $domain_ip_address,
+        libvirt__forward_mode: "route",
+        libvirt__dhcp_enabled: false,
+        hyperv__bridge: "windows-domain-controller"
+
+    config.vm.provision "shell", path: "provision/ps.ps1", args: ["configure-hyperv-guest.ps1", $domain_ip_address]
     config.vm.provision "shell", path: "provision/ps.ps1", args: ["domain-controller.ps1", $domain]
     config.vm.provision "shell", reboot: true
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller-wait-for-ready.ps1"
