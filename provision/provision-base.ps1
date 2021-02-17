@@ -123,8 +123,8 @@ cp -Force GoogleChrome-external_extensions.json (Resolve-Path "$chromeLocation\*
 cp -Force GoogleChrome-master_preferences.json "$chromeLocation\master_preferences"
 cp -Force GoogleChrome-master_bookmarks.html "$chromeLocation\master_bookmarks.html"
 
-# replace notepad with notepad2.
-choco install -y notepad2
+# replace notepad with notepad3.
+choco install -y notepad3
 
 # set default applications.
 choco install -y SetDefaultBrowser
