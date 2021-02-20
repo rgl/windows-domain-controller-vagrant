@@ -10,6 +10,8 @@ will therefore see and use trusted certificates.
 
 This will also set the user photo with a GPO.
 
+This will also set the Remote Desktop Users group with a GPO.
+
 This will also setup the `whoami` group Managed Service Account (gMSA).
 
 This setup will use the following static IP addresses:
