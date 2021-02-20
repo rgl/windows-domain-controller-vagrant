@@ -1,0 +1,2 @@
+﻿"Path","State","GpoName","Domain","OUDN","OUName","OUCanonical","Index","TotalCount"
+"CN={6AC1786C-016F-11D2-945F-00C04fB984F9},CN=Policies,CN=System,DC=example,DC=com","0","Default Domain Controllers Policy","EXAMPLE.COM","OU=Domain Controllers,DC=example,DC=com","Domain Controllers","example.com/Domain Controllers","0","1"

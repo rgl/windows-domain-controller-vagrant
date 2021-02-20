@@ -108,6 +108,15 @@ New-ADGroup `
     -GroupScope 'DomainLocal'
 
 
+# set the vagrant user photo.
+$name = 'vagrant'
+Set-ADUser `
+    -Identity "CN=vagrant,$usersAdPath" `
+    -Replace @{
+        photo = [byte[]](Get-Content -Encoding byte "users-photos/user-photo-$name.jpg")
+    }
+
+
 # add John Doe.
 $name = 'john.doe'
 New-ADUser `
@@ -120,7 +129,10 @@ New-ADUser `
     -DisplayName 'John Doe' `
     -AccountPassword $password `
     -Enabled $true `
-    -PasswordNeverExpires $true
+    -PasswordNeverExpires $true `
+    -OtherAttributes @{
+        photo = [byte[]](Get-Content -Encoding byte "users-photos/user-photo-$name.jpg")
+    }
 # we can also set properties.
 Set-ADUser `
     -Identity "CN=$name,$usersAdPath" `
@@ -147,7 +159,10 @@ New-ADUser `
     -DisplayName 'Jane Doe' `
     -AccountPassword $password `
     -Enabled $true `
-    -PasswordNeverExpires $true
+    -PasswordNeverExpires $true `
+    -OtherAttributes @{
+        photo = [byte[]](Get-Content -Encoding byte "users-photos/user-photo-$name.jpg")
+    }
 
 
 echo 'john.doe Group Membership'

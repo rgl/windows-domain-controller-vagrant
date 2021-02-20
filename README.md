@@ -8,6 +8,8 @@ This will also install a Certification Authority with a GPO to automatically enr
 computers with a certificate signed by the trusted domain CA, Remote Desktop users
 will therefore see and use trusted certificates.
 
+This will also set the user photo with a GPO.
+
 This will also setup the `whoami` group Managed Service Account (gMSA).
 
 This setup will use the following static IP addresses:
