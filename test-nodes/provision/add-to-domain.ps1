@@ -11,6 +11,10 @@ $ErrorActionPreference = 'Stop'
 Get-NetAdapter | Set-DnsClientServerAddress -ServerAddresses $domainControllerIp
 
 
+# do not dynamically register the vagrant management interface address in the domain dns server.
+Get-NetAdapter Ethernet | Set-DNSClient -RegisterThisConnectionsAddress $false
+
+
 # add the machine to the domain.
 # NB if you get the following error message, its because you MUST first run sysprep.
 #       Add-Computer : Computer 'test-node-one' failed to join domain 'example.com' from its current workgroup 'WORKGROUP'
