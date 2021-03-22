@@ -22,7 +22,7 @@ $vm = Get-VM -Id $vmId
 #    the $env:HYPERV_SWITCH_NAME switch.
 # NB the first network adapter is the vagrant management interface
 #    which we do not modify.
-$networkAdapters = @(Get-VMNetworkAdapter -VM $vm | Select-Object -Skip 1)
+$networkAdapters = @(Get-VMNetworkAdapter -VM $vm | Sort-Object MacAddress | Select-Object -Skip 1)
 $networkAdapters | Select-Object -Skip $bridges.Length | ForEach-Object {
     Write-Host "Removing the VM $vmId from the $($_.SwitchName) switch..."
     $_ | Remove-VMNetworkAdapter
