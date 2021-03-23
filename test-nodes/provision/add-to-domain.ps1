@@ -6,7 +6,13 @@ param(
 $ErrorActionPreference = 'Stop'
 
 
-$adapters = Get-NetAdapter -Physical | Sort-Object MacAddress
+$systemVendor = (Get-WmiObject Win32_ComputerSystemProduct Vendor).Vendor
+
+
+$adapters = @(Get-NetAdapter -Physical)
+if ($systemVendor -eq 'Microsoft Corporation') {
+    $adapters = $adapters | Sort-Object MacAddress
+}
 $vagrantManagementAdapter = $adapters[0]
 $domainControllerAdapter = $adapters[1]
 
