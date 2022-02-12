@@ -5,7 +5,7 @@ $domain = "example.com"
 $domain_ip_address = "192.168.56.2"
 
 Vagrant.configure("2") do |config|
-    config.vm.box = "windows-2019-amd64"
+    config.vm.box = "windows-2022-amd64"
     config.vm.define "windows-domain-controller"
     config.vm.hostname = "dc"
 

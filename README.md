@@ -24,7 +24,7 @@ This setup will use the following static IP addresses:
 
 **NB** these are hardcoded in several files. Find then with `grep -r 192.168.56. .`.
 
-Install the [Windows 2019 base box](https://github.com/rgl/windows-vagrant).
+Install the [Windows 2022 base box](https://github.com/rgl/windows-vagrant).
 
 Install the [Ubuntu 20.04 base box](https://github.com/rgl/ubuntu-vagrant).
 
