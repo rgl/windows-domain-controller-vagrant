@@ -54,6 +54,7 @@ Vagrant.configure("2") do |config|
                     machine.id,
                     bridges.to_json
                 )
+                raise "failed to configure hyper-v with exit code #{$?.exitstatus}" if $?.exitstatus != 0
             end
         end
     end

@@ -15,17 +15,17 @@ trap {
 
 $bridges = ConvertFrom-Json $bridgesJson
 
-$vm = Get-VM -Id $vmId
+$vm = Hyper-V\Get-VM -Id $vmId
 
 # reconfigure the network adapters to use the given switch names.
 # NB vagrant has already configured ALL network interfaces to use
 #    the $env:HYPERV_SWITCH_NAME switch.
 # NB the first network adapter is the vagrant management interface
 #    which we do not modify.
-$networkAdapters = @(Get-VMNetworkAdapter -VM $vm | Sort-Object MacAddress | Select-Object -Skip 1)
+$networkAdapters = @(Hyper-V\Get-VMNetworkAdapter -VM $vm | Sort-Object MacAddress | Select-Object -Skip 1)
 $networkAdapters | Select-Object -Skip $bridges.Length | ForEach-Object {
     Write-Host "Removing the VM $vmId from the $($_.SwitchName) switch..."
-    $_ | Remove-VMNetworkAdapter
+    $_ | Hyper-V\Remove-VMNetworkAdapter
 }
 for ($n = 0; $n -lt $bridges.Length; ++$n) {
     $bridge = $bridges[$n]
@@ -34,18 +34,18 @@ for ($n = 0; $n -lt $bridges.Length; ++$n) {
     if ($n -lt $networkAdapters.Length) {
         Write-Host "Connecting the VM $vmId to the $switchName switch..."
         $networkAdapter = $networkAdapters[$n]
-        $networkAdapter | Connect-VMNetworkAdapter -SwitchName $switchName
-        $networkAdapter | Set-VMNetworkAdapterVlan -Untagged
+        $networkAdapter | Hyper-V\Connect-VMNetworkAdapter -SwitchName $switchName
+        $networkAdapter | Hyper-V\Set-VMNetworkAdapterVlan -Untagged
     } else {
         Write-Host "Connecting the VM $vmId to the $switchName switch..."
-        $networkAdapter = Add-VMNetworkAdapter `
+        $networkAdapter = Hyper-V\Add-VMNetworkAdapter `
             -VM $vm `
             -Name $switchName `
             -SwitchName $switchName `
             -Passthru
     }
-    $networkAdapter | Set-VMNetworkAdapter `
+    $networkAdapter | Hyper-V\Set-VMNetworkAdapter `
         -MacAddressSpoofing "$(if ($macAddressSpoofing) {'On'} else {'Off'})"
 }
 Write-Host "VM Network Adapters:"
-Get-VMNetworkAdapter -VM $vm
+Hyper-V\Get-VMNetworkAdapter -VM $vm

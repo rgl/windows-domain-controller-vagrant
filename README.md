@@ -164,7 +164,7 @@ PowerShell -NoLogo -NoProfile -ExecutionPolicy Bypass <<'EOF'
   $networkAdapterIpPrefixLength = 24
 
   # create the vSwitch.
-  New-VMSwitch -Name $switchName -SwitchType Internal | Out-Null
+  Hyper-V\New-VMSwitch -Name $switchName -SwitchType Internal | Out-Null
 
   # assign it an host IP address.
   $networkAdapter = Get-NetAdapter $networkAdapterName
