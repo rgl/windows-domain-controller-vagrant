@@ -72,6 +72,8 @@ xfreerdp \
   +clipboard
 ```
 
+**NB** For an headless RDP example see the [winps repository](https://github.com/rgl/winps).
+
 You can login with ssh, e.g.:
 
 ```bash
