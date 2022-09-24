@@ -63,7 +63,13 @@ You can login at the machine console.
 You can login with remote desktop, e.g.:
 
 ```bash
-xfreerdp /v:192.168.56.2 /u:john.doe /p:HeyH0Password /size:1440x900 +clipboard
+xfreerdp \
+  /v:dc.example.com \
+  /u:john.doe \
+  /p:HeyH0Password \
+  /size:1440x900 \
+  /dynamic-resolution \
+  +clipboard
 ```
 
 You can login with ssh, e.g.:
