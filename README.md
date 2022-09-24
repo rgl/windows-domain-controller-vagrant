@@ -77,7 +77,7 @@ xfreerdp \
 You can login with ssh, e.g.:
 
 ```bash
-ssh john.doe@192.168.56.2
+ssh john.doe@dc.example.com
 ```
 
 # Active Directory LDAP
