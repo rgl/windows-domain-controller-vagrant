@@ -38,14 +38,18 @@ vagrant plugin install vagrant-reload
 Start by launching the Domain Controller environment:
 
 ```bash
-vagrant up --provider=virtualbox # or --provider=libvirt
+# or --provider=hyperv (first see the Hyper-V Usage section bellow).
+# or --provider=virtualbox
+vagrant up --provider=libvirt
 ```
 
 Launch the test nodes:
 
 ```bash
 cd test-nodes
-vagrant up --provider=virtualbox # or --provider=libvirt
+# or --provider=hyperv
+# or --provider=virtualbox
+vagrant up --provider=libvirt
 ```
 
 Sign-in on the test nodes with one of the following accounts:
