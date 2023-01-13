@@ -82,7 +82,7 @@ ssh john.doe@dc.example.com
 
 # Active Directory LDAP
 
-You can use a normal LDAP client for acessing the Active Directory.
+You can use a normal LDAP client for accessing the Active Directory.
 
 It accepts the following _Bind DN_ formats:
 
