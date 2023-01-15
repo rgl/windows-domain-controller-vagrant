@@ -1,3 +1,5 @@
+# About
+
 This is an example on how to create a Windows Domain Controller using Vagrant and PowerShell.
 
 This also shows how to add a Computer to an existing domain using PowerShell.
@@ -24,9 +26,11 @@ This setup will use the following static IP addresses:
 
 **NB** these are hardcoded in several files. Find then with `grep -r 192.168.56. .`.
 
+# Usage
+
 Install the [Windows 2022 base box](https://github.com/rgl/windows-vagrant).
 
-Install the [Ubuntu 20.04 base box](https://github.com/rgl/ubuntu-vagrant).
+Install the [Ubuntu 22.04 base box](https://github.com/rgl/ubuntu-vagrant).
 
 Install the required Vagrant plugins:
 

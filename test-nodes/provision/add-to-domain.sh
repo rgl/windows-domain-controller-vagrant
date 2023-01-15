@@ -66,7 +66,7 @@ msktutil \
     --server dc.$domain \
     --user-creds-only
 ldapmodify \
-    -h dc.$domain \
+    -H ldap://dc.$domain \
     <<EOF
 dn: CN=$(hostname),CN=Computers,$domain_dn
 changeType: modify
@@ -78,7 +78,7 @@ operatingSystemVersion: $(bash -c 'source /etc/os-release && echo $VERSION')
 -
 EOF
 ldapsearch \
-  -h dc.$domain \
+  -H ldap://dc.$domain \
   -b CN=Computers,$domain_dn \
   '(objectClass=computer)'
 ktutil --keytab=/etc/sssd/sssd.keytab list
