@@ -86,7 +86,7 @@ Vagrant.configure("2") do |config|
         config.vm.provision "shell", path: "provision/ps.ps1", args: ["add-to-domain.ps1", $domain, $domain_ip_address]
         config.vm.provision "shell", reboot: true
         config.vm.provision "shell", path: "provision/ps.ps1", args: "provision-powershell-activedirectory-module.ps1"
-        config.vm.provision "shell", inline: "$env:chocolateyVersion='0.12.1'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex", name: "Install Chocolatey"
+        config.vm.provision "shell", inline: "$env:chocolateyVersion='1.2.1'; Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')", name: "Install Chocolatey"
         config.vm.provision "shell", path: "provision/ps.ps1", args: "provision-google-chrome.ps1"
         config.vm.provision "shell", path: "provision/ps.ps1", args: "provision-whoami-web.ps1"
     end
