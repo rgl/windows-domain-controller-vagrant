@@ -1,7 +1,7 @@
 $name = 'whoami-web'
 $installPath = "C:\$name"
-$url = 'https://github.com/rgl/whoami-web/releases/download/v0.0.2/whoami-web.zip'
-$hash = 'DE189EB6289083808D97C94C3155C8AD2668A821778C753DEA34A945FADD903E'
+$url = 'https://github.com/rgl/whoami-web/releases/download/v0.0.3/whoami-web.zip'
+$hash = 'ABE3F0C260C543B3AE514A89BA71976EBC371A14F09C5115BF991D1932CF8BD0'
 
 # define the Install-Application function that downloads and unzips an application.
 Add-Type -AssemblyName System.IO.Compression.FileSystem
