@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller-wait-for-ready.ps1"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "set-vagrant-domain-admin.ps1"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller-configure.ps1"
-    config.vm.provision "shell", inline: "$env:chocolateyVersion='2.2.2'; Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')", name: "Install Chocolatey"
+    config.vm.provision "shell", inline: "$env:chocolateyVersion='2.3.0'; Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')", name: "Install Chocolatey"
     config.vm.provision "shell", path: "provision/ps.ps1", args: "provision-base.ps1"
     config.vm.provision "shell", reboot: true
     config.vm.provision "shell", path: "provision/ps.ps1", args: "domain-controller-wait-for-ready.ps1"
