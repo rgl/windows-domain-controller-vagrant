@@ -129,3 +129,24 @@ choco install -y notepad3
 # set default applications.
 choco install -y SetDefaultBrowser
 SetDefaultBrowser HKLM "Google Chrome"
+
+# install wireshark.
+choco install -y wireshark
+
+# download npcap to the desktop.
+# see https://nmap.org/npcap/#download
+# see https://github.com/nmap/npcap/releases
+# renovate: datasource=github-releases depName=nmap/npcap
+$npcapVersion = '1.80'
+$npcapPath = 'C:\Program Files\Npcap\npcap.sys'
+$downloadNpcap = if (Test-Path $npcapPath) {
+    $actualVersion = (Get-ChildItem $npcapPath).VersionInfo.ProductVersion
+    $actualVersion -ne $npcapVersion
+} else {
+    $true
+}
+if ($downloadNpcap) {
+    (New-Object System.Net.WebClient).DownloadFile(
+        "https://npcap.com/dist/npcap-$npcapVersion.exe",
+        "$env:USERPROFILE\Desktop\npcap-$npcapVersion.exe")
+}
