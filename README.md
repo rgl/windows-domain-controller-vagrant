@@ -28,9 +28,9 @@ This setup will use the following static IP addresses:
 
 # Usage
 
-Install the [Windows 2022 base box](https://github.com/rgl/windows-vagrant).
+Install the [Windows 2022 UEFI base box](https://github.com/rgl/windows-vagrant).
 
-Install the [Ubuntu 22.04 base box](https://github.com/rgl/ubuntu-vagrant).
+Install the [Ubuntu 22.04 UEFI base box](https://github.com/rgl/ubuntu-vagrant).
 
 Install the required Vagrant plugins:
 
