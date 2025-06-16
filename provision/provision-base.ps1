@@ -115,20 +115,8 @@ New-Item -Path HKCU:Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetSt
     | New-ItemProperty -Name FullPath -Value 1 -PropertyType DWORD `
     | Out-Null
 
-# install Google Chrome.
-# see https://www.chromium.org/administrators/configuring-other-preferences
-choco install -y --ignore-checksums googlechrome
-$chromeLocation = 'C:\Program Files\Google\Chrome\Application'
-cp -Force GoogleChrome-external_extensions.json (Resolve-Path "$chromeLocation\*\default_apps\external_extensions.json")
-cp -Force GoogleChrome-master_preferences.json "$chromeLocation\master_preferences"
-cp -Force GoogleChrome-master_bookmarks.html "$chromeLocation\master_bookmarks.html"
-
 # replace notepad with notepad3.
 choco install -y notepad3
-
-# set default applications.
-choco install -y SetDefaultBrowser
-SetDefaultBrowser HKLM "Google Chrome"
 
 # install wireshark.
 choco install -y wireshark
