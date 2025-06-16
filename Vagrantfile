@@ -26,19 +26,6 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder '.', '/vagrant', type: 'smb', smb_username: ENV['USER'], smb_password: ENV['VAGRANT_SMB_PASSWORD']
     end
 
-    config.vm.provider :virtualbox do |v, override|
-        v.linked_clone = true
-        v.cpus = 2
-        v.memory = 2048
-        v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
-        v.customize ["storageattach", :id,
-                        "--storagectl", "SATA Controller",
-                        "--device", "0",
-                        "--port", "1",
-                        "--type", "dvddrive",
-                        "--medium", "emptydrive"]
-    end
-
     config.vm.provider :hyperv do |hv, config|
         hv.linked_clone = true
         hv.enable_virtualization_extensions = false # nested virtualization.

@@ -13,12 +13,6 @@ Vagrant.configure("2") do |config|
         lv.keymap = 'pt'
     end
 
-    config.vm.provider :virtualbox do |v, override|
-        v.linked_clone = true
-        v.cpus = 2
-        v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
-    end
-
     config.vm.provider :hyperv do |hv, config|
         hv.linked_clone = true
         hv.enable_virtualization_extensions = false # nested virtualization.
@@ -66,10 +60,6 @@ Vagrant.configure("2") do |config|
             # NB for some reason, this does not work when placed in the base box Vagrantfile.
             config.vm.synced_folder '.', '/vagrant', type: 'smb', smb_username: ENV['USER'], smb_password: ENV['VAGRANT_SMB_PASSWORD']
         end
-        config.vm.provider :virtualbox do |v, override|
-            v.memory = 2048
-            v.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
-        end
         config.vm.provider :hyperv do |hv, config|
             hv.memory = 2048
         end
@@ -95,9 +85,6 @@ Vagrant.configure("2") do |config|
         config.vm.provider :libvirt do |lv, config|
             lv.memory = 1024
             config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
-        end
-        config.vm.provider :virtualbox do |v, override|
-            v.memory = 1024
         end
         config.vm.provider :hyperv do |hv, config|
             hv.memory = 1024

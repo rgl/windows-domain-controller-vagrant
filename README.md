@@ -43,7 +43,6 @@ Start by launching the Domain Controller environment:
 
 ```bash
 # or --provider=hyperv (first see the Hyper-V Usage section bellow).
-# or --provider=virtualbox
 vagrant up --provider=libvirt
 ```
 
@@ -52,7 +51,6 @@ Launch the test nodes:
 ```bash
 cd test-nodes
 # or --provider=hyperv
-# or --provider=virtualbox
 vagrant up --provider=libvirt
 ```
 
