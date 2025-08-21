@@ -139,7 +139,7 @@ Troubleshoot TLS with:
 # see the TLS certificate validation result:
 echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com -CAfile tmp/ExampleEnterpriseRootCA.pem
 # see the TLS certificate being returned by the server:
-echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com | openssl x509 -noout -text -in -
+echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com | openssl x509 -noout -text
 ```
 
 # Active Directory DNS
