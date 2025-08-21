@@ -125,7 +125,7 @@ choco install -y wireshark
 # see https://nmap.org/npcap/#download
 # see https://github.com/nmap/npcap/releases
 # renovate: datasource=github-releases depName=nmap/npcap
-$npcapVersion = '1.82'
+$npcapVersion = '1.83'
 $npcapPath = 'C:\Program Files\Npcap\npcap.sys'
 $downloadNpcap = if (Test-Path $npcapPath) {
     $actualVersion = (Get-ChildItem $npcapPath).VersionInfo.ProductVersion
