@@ -40,7 +40,7 @@ function Bash($script) {
         # we also redirect the stderr to stdout because PowerShell
         # oddly interleaves them.
         # see https://www.gnu.org/software/bash/manual/bash.html#The-Set-Builtin
-        echo 'exec 2>&1;set -eu;export PATH="/usr/bin:$PATH";' $script | &$bashPath
+        Write-Output 'exec 2>&1;set -eu;export PATH="/usr/bin:$PATH";' $script | &$bashPath
         if ($LASTEXITCODE) {
             throw "bash execution failed with exit code $LASTEXITCODE"
         }

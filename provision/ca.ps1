@@ -31,7 +31,7 @@ Install-AdcsCertificationAuthority `
 
 # export the CA certificate to the Vagrant project directory, so it can be used by other machines.
 mkdir -Force C:\vagrant\tmp | Out-Null
-dir Cert:\LocalMachine\My -DnsName $caCommonName `
+Get-ChildItem Cert:\LocalMachine\My -DnsName $caCommonName `
     | Export-Certificate -FilePath "C:\vagrant\tmp\$($caCommonName -replace ' ','').der" `
     | Out-Null
 
@@ -57,13 +57,13 @@ dir Cert:\LocalMachine\My -DnsName $caCommonName `
 $certificateTemplatesDn = "CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,$domainDn"
 ldifde -f c:/tmp/machine-certificate-template-sd.ldif -d "CN=Machine,$certificateTemplatesDn" -l nTSecurityDescriptor
 Get-Content c:/tmp/machine-certificate-template-sd.ldif `
-    | Select -Skip 2 `
+    | Select-Object -Skip 2 `
     | Add-Content c:/tmp/rdpauth-certificate-template.ldif
 ldifde -f c:/tmp/rdpauth-certificate-template.ldif -i
 
 
 # add the template to the CA.
-echo 'Adding the Certificate Template to the CA'
+Write-Host 'Adding the Certificate Template to the CA'
 Get-CertificationAuthority | Get-CATemplate | Add-CATemplate -Name RDPAuth | Set-CATemplate | Out-Null
 
 

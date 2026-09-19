@@ -165,42 +165,42 @@ New-ADUser `
     }
 
 
-echo 'john.doe Group Membership'
+Write-Host 'john.doe Group Membership'
 Get-ADPrincipalGroupMembership -Identity 'john.doe' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
-echo 'jane.doe Group Membership'
+Write-Host 'jane.doe Group Membership'
 Get-ADPrincipalGroupMembership -Identity 'jane.doe' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
-echo 'vagrant Group Membership'
+Write-Host 'vagrant Group Membership'
 Get-ADPrincipalGroupMembership -Identity 'vagrant' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
 
-echo 'Enterprise Administrators'
+Write-Host 'Enterprise Administrators'
 Get-ADGroupMember `
     -Identity 'Enterprise Admins' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
-echo 'Domain Administrators'
+Write-Host 'Domain Administrators'
 Get-ADGroupMember `
     -Identity 'Domain Admins' `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
 
-echo 'Enabled Domain User Accounts'
+Write-Host 'Enabled Domain User Accounts'
 Get-ADUser -Filter {Enabled -eq $true} `
     | Select-Object Name,DistinguishedName,SID `
     | Format-Table -AutoSize | Out-String -Width 2000
 
 
-echo 'Enabled Group Managed Service Accounts (gMSA)'
+Write-Host 'Enabled Group Managed Service Accounts (gMSA)'
 Get-ADServiceAccount `
     -Filter {Enabled -eq $true} `
     -Properties Name,DistinguishedName,SID,PrincipalsAllowedToRetrieveManagedPassword `

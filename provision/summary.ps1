@@ -1,5 +1,5 @@
 # list OS information.
-echo 'OS Details:'
+Write-Host 'OS Details:'
 New-Object -TypeName PSObject -Property @{
     Is64BitOperatingSystem = [Environment]::Is64BitOperatingSystem
 } | Format-Table -AutoSize
@@ -7,8 +7,8 @@ New-Object -TypeName PSObject -Property @{
 
 
 # list all the installed Windows features.
-echo 'Installed Windows Features:'
-Get-WindowsFeature | Where Installed | Format-Table -AutoSize | Out-String -Width 2000
+Write-Host 'Installed Windows Features:'
+Get-WindowsFeature | Where-Object Installed | Format-Table -AutoSize | Out-String -Width 2000
 
 
 # see https://gist.github.com/IISResetMe/36ef331484a770e23a81
@@ -33,4 +33,4 @@ function Get-MachineSID {
         New-Object System.Security.Principal.SecurityIdentifier -ArgumentList $MachineSID
     }
 }
-echo "This Computer SID is $(Get-MachineSID)"
+Write-Host "This Computer SID is $(Get-MachineSID)"

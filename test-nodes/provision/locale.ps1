@@ -72,9 +72,9 @@ function Set-WinLogonLanguageList {
         Remove-ItemProperty -Path $path -Name $current -Force
 
         # remove languages that are not installed on the system
-        if ($list | where { -not $_.Autonym }) {
+        if ($list | Where-Object { -not $_.Autonym }) {
             Write-Warning "The list you attempted to set contained invalid langauges which were ignored"
-            $finalList = $list | where Autonym
+            $finalList = $list | Where-Object Autonym
         } else {
             $finalList = $list
         }
