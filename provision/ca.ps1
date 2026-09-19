@@ -3,10 +3,10 @@ Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
 
 
 # install the PSPKI module.
-# see https://github.com/PKISolutions/PSPKI
-# see https://www.powershellgallery.com/packages/PSPKI/3.7.2
+# see https://github.com/Crypt32/PSPKI
+# see https://www.powershellgallery.com/packages/PSPKI/4.4.1
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
-Install-Module -Name PSPKI -Force | Out-Null
+Install-Module -Name PSPKI -RequiredVersion 4.4.1 -AllowClobber -Force | Out-Null
 Import-Module PSPKI
 
 
