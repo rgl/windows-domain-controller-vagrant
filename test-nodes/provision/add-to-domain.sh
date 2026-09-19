@@ -24,7 +24,7 @@ openssl x509 \
     -out /usr/local/share/ca-certificates/ExampleEnterpriseRootCA.crt
 update-ca-certificates --verbose
 
-# these anwsers were obtained (after installing heimdal-clients) with:
+# these answers were obtained (after installing heimdal-clients) with:
 #
 #   #sudo debconf-show krb5-config
 #   sudo apt-get install debconf-utils
@@ -59,11 +59,16 @@ EOF
 kinit --password-file=STDIN administrator <<'EOF'
 HeyH0Password
 EOF
+# NB --enctypes 0x18 restricts the Computer msDS-SupportedEncryptionTypes to aes.
+#       0x04=arcfour-hmac-md5 (aka rc4)
+#       0x08=aes128-cts-hmac-sha1-96
+#       0x10=aes256-cts-hmac-sha1-96
 msktutil \
     --create \
     --keytab /etc/sssd/sssd.keytab \
     --no-reverse-lookups \
     --server dc.$domain \
+    --enctypes 0x18 \
     --user-creds-only
 ldapmodify \
     -H ldap://dc.$domain \
@@ -78,9 +83,9 @@ operatingSystemVersion: $(bash -c 'source /etc/os-release && echo $VERSION')
 -
 EOF
 ldapsearch \
-  -H ldap://dc.$domain \
-  -b CN=Computers,$domain_dn \
-  '(objectClass=computer)'
+    -H ldap://dc.$domain \
+    -b CN=Computers,$domain_dn \
+    '(objectClass=computer)'
 ktutil --keytab=/etc/sssd/sssd.keytab list
 kdestroy
 
@@ -93,7 +98,6 @@ kdestroy
 install -o root -g root -m 600 /dev/null /etc/sssd/sssd.conf
 cat >/etc/sssd/sssd.conf <<EOF
 [sssd]
-config_file_version = 2
 domains = $domain
 #debug_level = 10
 

@@ -30,7 +30,7 @@ This setup will use the following static IP addresses:
 
 Install the [Windows 2022 UEFI base box](https://github.com/rgl/windows-vagrant).
 
-Install the [Ubuntu 22.04 UEFI base box](https://github.com/rgl/ubuntu-vagrant).
+Install the [Ubuntu 26.04 UEFI base box](https://github.com/rgl/ubuntu-vagrant).
 
 Install the required Vagrant plugins:
 
@@ -147,7 +147,9 @@ echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com |
 You can update the DNS zone using the computer principal credentials, e.g.:
 
 ```bash
+ktutil --keytab=/etc/sssd/sssd.keytab list
 kinit --keytab=/etc/sssd/sssd.keytab 'ubuntu$'
+klist -v
 nsupdate -g <<'EOF'
 server dc.example.com
 zone example.com.
