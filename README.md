@@ -28,7 +28,7 @@ This setup will use the following static IP addresses:
 
 # Usage
 
-Install the [Windows 2022 UEFI base box](https://github.com/rgl/windows-vagrant).
+Install the [Windows 2025 UEFI base box](https://github.com/rgl/windows-vagrant).
 
 Install the [Ubuntu 26.04 UEFI base box](https://github.com/rgl/ubuntu-vagrant).
 
