@@ -8,12 +8,13 @@ choco install -y msys2 --params '/NoPath'
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyInstaller.psm1"
 Update-SessionEnvironment
 
-# configure the msys2 launcher to let the shell inherith the PATH.
+# configure the msys2 launcher to let the shell inherit the PATH.
 $msys2BasePath = "$env:ChocolateyToolsLocation\msys64"
 @(
-    'msys2.ini'
-    'mingw32.ini'
+    'clang64.ini'
     'mingw64.ini'
+    'msys2.ini'
+    'ucrt64.ini'
 ) | ForEach-Object {
     $msys2ConfigPath = "$msys2BasePath\$_"
     [IO.File]::WriteAllText(
@@ -31,7 +32,7 @@ $msys2BasePath = "$env:ChocolateyToolsLocation\msys64"
 )
 Write-Output 'C:\Users /home' | Out-File -Encoding ASCII -Append "$msys2BasePath\etc\fstab"
 
-# define a function for easying the execution of bash scripts.
+# define a function for easing the execution of bash scripts.
 $bashPath = "$msys2BasePath\usr\bin\bash.exe"
 function Bash($script) {
     $eap = $ErrorActionPreference
