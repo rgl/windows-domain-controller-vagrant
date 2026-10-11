@@ -93,11 +93,11 @@ Install-ChocolateyShortcut `
 # add MSYS2 shortcut to the Desktop and Start Menu.
 Install-ChocolateyShortcut `
     -ShortcutFilePath "$env:USERPROFILE\Desktop\MSYS2 Bash.lnk" `
-    -TargetPath "$env:ChocolateyToolsLocation\msys64\mingw64.exe" `
+    -TargetPath "$env:ChocolateyToolsLocation\msys64\ucrt64.exe" `
     -WorkingDirectory '%USERPROFILE%'
 Install-ChocolateyShortcut `
     -ShortcutFilePath "C:\Users\All Users\Microsoft\Windows\Start Menu\Programs\MSYS2 Bash.lnk" `
-    -TargetPath "$env:ChocolateyToolsLocation\msys64\mingw64.exe" `
+    -TargetPath "$env:ChocolateyToolsLocation\msys64\ucrt64.exe" `
     -WorkingDirectory '%USERPROFILE%'
 
 # restart explorer to apply the changed settings.

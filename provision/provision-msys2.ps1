@@ -112,8 +112,10 @@ EOF
 "@
 
 # install the ldap utilities (e.g. ldapsearch)
+# see https://github.com/msys2/MINGW-packages
+# see https://packages.msys2.org/search?q=openldap
 Bash @'
-pacman --noconfirm -Sy man mingw-w64-x86_64-openldap
+pacman --noconfirm -Sy man mingw-w64-ucrt-x86_64-openldap
 
 openssl x509 -inform der -in /c/vagrant/tmp/ExampleEnterpriseRootCA.der -out ~/ExampleEnterpriseRootCA.pem
 cat >~/ldaprc <<EOF

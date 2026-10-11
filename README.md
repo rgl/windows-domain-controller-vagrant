@@ -121,7 +121,7 @@ ldapsearch \
   sAMAccountName userPrincipalName userAccountControl displayName cn mail
 ```
 
-**NB** To have `ldapsearch` you can install the [msys2 mingw-w64-openldap package](https://github.com/msys2/MINGW-packages/tree/master/mingw-w64-openldap) with `pacman -Sy mingw-w64-x86_64-openldap`.
+**NB** To have `ldapsearch` you can install the [msys2 mingw-w64-openldap package](https://github.com/msys2/MINGW-packages/tree/master/mingw-w64-openldap) with `pacman -Sy mingw-w64-ucrt-x86_64-openldap`.
 
 For TLS, use `-H ldaps://dc.example.com`, after creating the `ldaprc` file with:
 
