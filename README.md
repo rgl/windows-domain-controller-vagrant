@@ -84,6 +84,8 @@ You can login with ssh, e.g.:
 
 ```bash
 ssh john.doe@dc.example.com
+klist
+exit
 ```
 
 # Active Directory LDAP
