@@ -149,6 +149,8 @@ echo | openssl s_client -connect dc.example.com:636 -servername dc.example.com |
 You can update the DNS zone using the computer principal credentials, e.g.:
 
 ```bash
+vagrant ssh ubuntu
+sudo -i
 ktutil --keytab=/etc/sssd/sssd.keytab list
 kinit --keytab=/etc/sssd/sssd.keytab 'ubuntu$'
 klist -v
@@ -162,6 +164,8 @@ update add ubuntu.example.com. 60 in TXT "hello world"
 send
 EOF
 kdestroy
+exit
+exit
 ```
 
 # Hyper-V Usage
